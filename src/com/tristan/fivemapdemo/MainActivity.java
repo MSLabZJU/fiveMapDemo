@@ -1,5 +1,12 @@
 package com.tristan.fivemapdemo;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.List;
 
 import android.app.Activity;
@@ -53,8 +60,45 @@ public class MainActivity extends Activity {
 		
 		// 获取帧布局对象，并设置其背景图
 		final FrameLayout fl = (FrameLayout) findViewById(R.id.outside);
+		
+		
+		new Thread(new Runnable(){
+			public void run(){
+				Socket socket;
+				try {
+					socket = new Socket("192.168.1.100",8888);
+					BufferedReader bw = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
+					PrintWriter pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
+					pw.println("login");
+					pw.println("林峰");
+					pw.println("666666");
+					pw.flush();
+					String line = null;
+					while((line = bw.readLine())!=null){
+						if("success".equals(line)){
+							while((line = bw.readLine())!=null){
+								String[] str = line.split(" ");
+								System.out.println("X:"+str[0]+",Y:"+str[1]);
+							}
+						}
+						else if("failed".equals(line)){
+							Toast.makeText(MainActivity.this, "fail", 0).show();
+						}
+					}
+				} catch (UnknownHostException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}).start();
 
 
+	
+		
+		
 	   //获取屏幕的分辨率
 	   DisplayMetrics metric = new DisplayMetrics();
        getWindowManager().getDefaultDisplay().getMetrics(metric);
