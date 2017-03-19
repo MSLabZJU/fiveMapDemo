@@ -18,6 +18,8 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Paint.Style;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -50,6 +52,15 @@ public class MainActivity extends Activity {
 	private BoardView draw_board;
 	//用来画地图的view
 	private BackgroundView draw_map;
+	//用来处理子线程送过来的消息
+	private Handler handler = new Handler(){
+		public void handleMessage(android.os.Message msg){
+			Point this_point = (Point) msg.obj;
+			draw_point = new MapView(MainActivity.this,"test2",this_point);
+			FrameLayout fl = (FrameLayout) findViewById(R.id.outside);
+			fl.addView(draw_point);
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +73,12 @@ public class MainActivity extends Activity {
 		final FrameLayout fl = (FrameLayout) findViewById(R.id.outside);
 		
 		
-		new Thread(new Runnable(){
+		PointsData locPoint = new PointsData(this);
+		final List<Point> points = locPoint.getPointList();
+		//draw_point=new MapView(MainActivity.this,"test1",points);
+		
+		
+		Thread getPoints = new Thread(new Runnable(){
 			public void run(){
 				Socket socket;
 				try {
@@ -78,11 +94,21 @@ public class MainActivity extends Activity {
 						if("success".equals(line)){
 							while((line = bw.readLine())!=null){
 								String[] str = line.split(" ");
+								int x = (int)Float.parseFloat(str[0]);
+								int y = (int)Float.parseFloat(str[1]);
 								System.out.println("X:"+str[0]+",Y:"+str[1]);
+								Point point_get =new Point(x,y); 
+								points.add(point_get);
+								Message msg = new Message();
+								msg.obj = point_get;
+//								try {
+//									Thread.sleep(500);
+//								} catch (InterruptedException e) {
+//								}
+								handler.sendMessage(msg);
 							}
 						}
 						else if("failed".equals(line)){
-							Toast.makeText(MainActivity.this, "fail", 0).show();
 						}
 					}
 				} catch (UnknownHostException e) {
@@ -93,7 +119,9 @@ public class MainActivity extends Activity {
 					e.printStackTrace();
 				}
 			}
-		}).start();
+		});
+		
+		getPoints.start();
 
 
 	
@@ -125,16 +153,13 @@ public class MainActivity extends Activity {
 		btn4 = (Button) findViewById(R.id.btn_reset);
 		
 		
-		PointsData locPoint = new PointsData(this);
-		List<Point> points = locPoint.getPointList();
-		draw_point=new MapView(MainActivity.this,"test",points);
-		System.out.println(points);
-		
+
 		
 		//btn1的按键监听
 		btn1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		    	if (isChecked) {
+		    		draw_point=new MapView(MainActivity.this,"test1",points);
 		            fl.addView(draw_point);
 		        } else {
 		            fl.removeView(draw_point);

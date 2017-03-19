@@ -27,6 +27,7 @@ public class MapView extends View {
 
 	//待画的坐标点
 	ArrayList<Point> testPoints;
+	Point testPoint;
 	
 	//获取屏幕的像素点密度
 	DisplayMetrics metric = new DisplayMetrics();
@@ -37,15 +38,27 @@ public class MapView extends View {
 		super(context);
 	}
 
+	public MapView(Context context,String str,Point point){
+		super(context);
+		if (str == "test2"){
+			test = true;
+		}
+		
+		testPoint = point;
+	}
+	
 	//现在没啥用了，但是加个字符串test可以清楚点
 	public MapView(Context context,String str,List<Point> points){
 		super(context);
-		if (str == "test"){
+		if (str == "test1"){
 			test = true;
 		}
 		
 		testPoints = (ArrayList<Point>) points;
 	}
+	
+
+	
 
 	//根据屏幕的DPI重新封装drawPoint()方法，
 	//这里drawPoint()方法里所用的坐标单位是px，需要转化为dip/dp
@@ -61,6 +74,14 @@ public class MapView extends View {
 		}
 	}
 	
+	private void drawDpPoint(Canvas canvas,Point point,Paint paint){
+		//现在碰到的手机都还是整数，如华为的mate2为2,LG代工的nexus5为3，但以后碰到小数位的可能会有隐患
+		int u = 3;
+		//相对于imageview的原点再平移一个(50,30)
+			x=(point.x+50)*u;
+			y=(point.y+30)*u;
+			canvas.drawPoint(x,y,paint);
+	}
 
 	
 	/*
@@ -164,7 +185,7 @@ public class MapView extends View {
 
 		Paint paint_Point = new Paint();
 		paint_Point.setAntiAlias(true); // 抗锯齿
-		paint_Point.setStrokeWidth(4); // 设置画笔宽度
+		paint_Point.setStrokeWidth(8); // 设置画笔宽度
 		paint_Point.setStyle(Style.STROKE);
 		paint_Point.setColor(Color.RED); // 画笔的颜色
 		paint_Point.setStrokeCap(Cap.ROUND);//圆头的画笔头
@@ -172,9 +193,7 @@ public class MapView extends View {
 		
 			
 		if (test) {
-
-//			Toast.makeText(, text, duration)
-			drawDpPoint(canvas, testPoints, paint_Point);
+			drawDpPoint(canvas, testPoint, paint_Point);
 		}
 	}
 }
