@@ -23,10 +23,11 @@ import android.widget.Toast;
 public class MapView extends View {
 	private float x=0, y=0;
 	//用于测试
-	private boolean test = false; 
+	private int test_flag; 
 
-	//待画的坐标点
+	//存储本地服务器的点
 	ArrayList<Point> testPoints;
+	//存放从服务器拿到的点
 	Point testPoint;
 	
 	//获取屏幕的像素点密度
@@ -38,26 +39,27 @@ public class MapView extends View {
 		super(context);
 	}
 
-	public MapView(Context context,String str,Point point){
-		super(context);
-		if (str == "test2"){
-			test = true;
-		}
-		
-		testPoint = point;
-	}
-	
-	//现在没啥用了，但是加个字符串test可以清楚点
+
+	//test_flag =0 , 如果从本地服务器复现点迹，就调用这个构造器，一次全部显示所有点迹
 	public MapView(Context context,String str,List<Point> points){
 		super(context);
 		if (str == "test1"){
-			test = true;
+			test_flag = 0;
 		}
 		
 		testPoints = (ArrayList<Point>) points;
 	}
 	
-
+	//test_flag =1 , 如果从服务器接受数据，就调用这个构造器，每次接受一个点就画一个点
+	public MapView(Context context,String str,Point point){
+		super(context);
+		if (str == "test2"){
+			test_flag = 1;
+		}
+		
+		testPoint = point;
+	}
+	
 	
 
 	//根据屏幕的DPI重新封装drawPoint()方法，
@@ -192,8 +194,17 @@ public class MapView extends View {
 		
 		
 			
-		if (test) {
+		
+		switch (test_flag) {
+		case 0:          //从本地数据库拿到的点
+			drawDpPoint(canvas, testPoints, paint_Point);
+			break;
+		
+		case 1:          //从服务器请求得到点
 			drawDpPoint(canvas, testPoint, paint_Point);
+			break;
+		default:
+			break;
 		}
 	}
 }
