@@ -72,7 +72,8 @@ public class MainActivity extends Activity {
 		// 获取帧布局对象，并设置其背景图
 		final FrameLayout fl = (FrameLayout) findViewById(R.id.outside);
 		
-		
+	    //将assets中的外部db文件拷贝到data/data/databases中
+		DatabaseUtil.packDataBase(this);
 		PointsData locPoint = new PointsData(this);
 		final List<Point> points = locPoint.getPointList();
 		//draw_point=new MapView(MainActivity.this,"test1",points);
@@ -143,8 +144,7 @@ public class MainActivity extends Activity {
        screenInfo.setText("宽度："+width+"  高度："+height+"  密度："+density+"  DPI："+densityDpi);
 		
        
-       //将assets中的外部db文件拷贝到data/data/databases中
-		DatabaseUtil.packDataBase(this);
+
        
        
 		btn1 = (ToggleButton) findViewById(R.id.btn_test);
@@ -159,8 +159,25 @@ public class MainActivity extends Activity {
 		btn1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		    	if (isChecked) {
-		    		draw_point=new MapView(MainActivity.this,"test1",points);
-		            fl.addView(draw_point);
+		    		new Thread(new Runnable() {
+						public void run() {
+							for (Point point : points) {
+								Message msg =  new Message();
+								msg.obj = point;
+								try {
+									Thread.sleep(300);
+								} catch (InterruptedException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								handler.sendMessage(msg);
+//								draw_point=new MapView(MainActivity.this,"test2",point);
+//					            fl.addView(draw_point);
+							}
+						}
+					}).start();
+		    		
+		    	
 		        } else {
 		            fl.removeView(draw_point);
 		        }
