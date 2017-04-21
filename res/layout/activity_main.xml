@@ -67,18 +67,28 @@
             android:textOn="地图"
             android:textOff="关闭" />
         
+        <Button 
+            android:id="@+id/btn_astar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="0dp"
+            android:text="A*"/>
+        
         <Button
             android:id="@+id/btn_reset"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="0dp"
             android:text="重启" />
+
     </LinearLayout>
 
+    
     <AnalogClock
         android:id="@+id/analogClock1"
         android:layout_width="65dp"
         android:layout_height="65dp"
+        android:visibility="invisible"
         android:layout_gravity="bottom"
         android:layout_marginBottom="60dp"
         android:layout_marginLeft="40dp" />

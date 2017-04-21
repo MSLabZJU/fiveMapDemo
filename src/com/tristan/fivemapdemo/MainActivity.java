@@ -7,7 +7,11 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.List;
+
+import com.xiaoxuan.map.Barrier;
+import com.xiaoxuan.map.drawAstarPath;
 
 import android.app.Activity;
 import android.content.Context;
@@ -44,6 +48,13 @@ public class MainActivity extends Activity {
 	private ToggleButton btn3;
 	//初始化按钮
 	private Button btn4;
+	
+	
+	//用于测试A星算法的按钮
+	private Button btn5;
+	//用于画出astar算法给出的路径
+	private drawAstarPath pathView;
+	
 	//屏幕相关信息展示
 	private TextView screenInfo;
 	//用来画测试图的view
@@ -151,6 +162,7 @@ public class MainActivity extends Activity {
 		btn2 = (ToggleButton) findViewById(R.id.btn_board);
 		btn3 = (ToggleButton) findViewById(R.id.btn_map);
 		btn4 = (Button) findViewById(R.id.btn_reset);
+		btn5 = (Button) findViewById(R.id.btn_astar);
 		
 		
 
@@ -225,7 +237,27 @@ public class MainActivity extends Activity {
 //				ll.removeView(draw_point);
 			}
 		});
+		
+		btn5.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Barrier test = new Barrier();
+				ArrayList<Point> testPoints = new ArrayList<Point>();
+				//添加从点(187,280)到(187,344)的障碍物
+				for (int i = 280/10; i < 345/10; i++) {
+					testPoints.add(new Point(187/10,i));
+				}
+				test.addBarrierPoint(testPoints);
+				Point src = new Point(187/10,280/10);
+				Point dst = new Point(187/10,344/10);
+				pathView = new drawAstarPath(MainActivity.this, test, src, dst);
+				fl.addView(pathView);
+			}
+		});
 	}
+	
+	
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
