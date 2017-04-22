@@ -1,4 +1,4 @@
-package com.tristan.fivemapdemo;
+package com.tristan.mapview;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,6 +10,9 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.tristan.fivemapdemo.R;
+import com.tristan.sqlhelper.DatabaseUtil;
+import com.tristan.sqlhelper.PointsData;
 import com.xiaoxuan.map.Barrier;
 import com.xiaoxuan.map.drawAstarPath;
 

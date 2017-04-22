@@ -1,4 +1,4 @@
-package com.tristan.fivemapdemo;
+package com.tristan.mapview;
 
 
 import java.util.ArrayList;
