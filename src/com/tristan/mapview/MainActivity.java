@@ -24,6 +24,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Paint.Style;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -37,35 +38,30 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
 //测试一下github是否关联成功
 public class MainActivity extends Activity {
-	//测试按钮
-	private ToggleButton btn1;
-	//显示蒙版的状态切换按钮
-	private ToggleButton btn2;
-	//用于代码中画图的按钮
-	private ToggleButton btn3;
-	//初始化按钮
-	private Button btn4;
 	
+	private ToggleButton btn1;					//测试按钮
+	private ToggleButton btn2;					//显示蒙版的状态切换按钮
+	private ToggleButton btn3;					//用于代码中画图的按钮
+	private Button btn4;						//初始化按钮
+	private Button btn5;						//用于测试A星算法的按钮
+	private drawAstarPath pathView;				//用于画出astar算法给出的路径
+	private TextView screenInfo;				//屏幕相关信息展示
+	private MapView draw_point;					//用来画测试图的view
+	private BoardView draw_board;				//用来画蒙板的view
+	private BackgroundView draw_map;			//用来画地图的view
+	private ImageView map_bg;					//地图
+	private RadioGroup mapset;					//切换地图
 	
-	//用于测试A星算法的按钮
-	private Button btn5;
-	//用于画出astar算法给出的路径
-	private drawAstarPath pathView;
-	
-	//屏幕相关信息展示
-	private TextView screenInfo;
-	//用来画测试图的view
-	private MapView draw_point;
-	//用来画蒙板的view
-	private BoardView draw_board;
-	//用来画地图的view
-	private BackgroundView draw_map;
 	//用来处理子线程送过来的消息
 	private Handler handler = new Handler(){
 		public void handleMessage(android.os.Message msg){
@@ -166,8 +162,8 @@ public class MainActivity extends Activity {
 		btn3 = (ToggleButton) findViewById(R.id.btn_map);
 		btn4 = (Button) findViewById(R.id.btn_reset);
 		btn5 = (Button) findViewById(R.id.btn_astar);
-		
-		
+		mapset = (RadioGroup) findViewById(R.id.mapchoice);
+		map_bg = (ImageView) findViewById(R.id.map);
 
 		
 		//btn1的按键监听
@@ -258,8 +254,23 @@ public class MainActivity extends Activity {
 				fl.addView(pathView);
 			}
 		});
+		
+		mapset.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
+				switch (checkedId) {
+				case R.id.btn_5f:
+					map_bg.setBackgroundResource(R.drawable.control_new_5f);
+					break;
+				case R.id.btn_9_526:
+					map_bg.setBackgroundResource(R.drawable.map_9_526);
+					break;
+				default:
+					break;
+				}
+				
+			}
+		});
 	}
-	
 	
 
     @Override

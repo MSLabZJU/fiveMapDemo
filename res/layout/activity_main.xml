@@ -12,35 +12,51 @@
     tools:context=".MainActivity" >
 
     
-	<!-- mark一下，后面可以把坐标系用一个选择开关来选择是否显示 -->
-    <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="30dp"
-        android:background="@drawable/axis"
-        android:contentDescription="@string/axis"
-        android:visibility="visible" />
+
     
     
 	<!-- 地图 -->
     <ImageView
+        android:id="@+id/map"
         android:layout_width="250dp"
         android:layout_height="500dp"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="30dp"
-        android:background="@drawable/test3"
+        android:background="@drawable/control_new_5f"
         android:contentDescription="@string/bgimg"
         android:visibility="visible" />
-
+	
+	<LinearLayout 
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="right|top"
+	    android:layout_marginRight="20dp"
+	    android:orientation="vertical">
+	    <RadioGroup 
+	        android:id="@+id/mapchoice"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content">
+	        <RadioButton 
+	            android:id="@+id/btn_5f"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="新楼5F"/>
+	        <RadioButton 
+	            android:id="@+id/btn_9_526"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="教九526"/>
+	    </RadioGroup>
+	</LinearLayout>
+    
+    
     
 	<!-- 按钮组 -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="left|center_vertical"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="0dp"
+        android:layout_gravity="right|center_vertical"
+        android:layout_marginRight="5dp"
         android:orientation="vertical" >
      
         <ToggleButton
@@ -83,6 +99,15 @@
 
     </LinearLayout>
 
+    <!-- mark一下，后面可以把坐标系用一个选择开关来选择是否显示 -->
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/axis"
+        android:contentDescription="@string/axis"
+        android:visibility="visible" />
     
     <AnalogClock
         android:id="@+id/analogClock1"
