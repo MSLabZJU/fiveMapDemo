@@ -432,19 +432,4 @@ public class Pointmap {
 		return (ArrayList<Point>) this.path.clone();
 	}
     
-	
-	//拿这个点试下
-//	public static void main(String[] args){
-//		Point initial=new Point(20,60);
-//		Point end=new Point(40,60);
-//		//设置障碍物
-//		Barrier barrier = new Barrier();
-//		ArrayList<Point> flatePoints=new ArrayList<Point>();
-//		for(int j=50;j<99;j=j+1){
-//				flatePoints.add(new Point(30,j));
-//		};
-//		barrier.addBarrierPoint(flatePoints);
-//		//放入障碍物，起点，终点，开始测试
-//        Pointmap test=new Pointmap(barrier,initial,end);
-//	}	
 }
