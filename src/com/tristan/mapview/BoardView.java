@@ -36,10 +36,10 @@ public class BoardView extends View {
 		//现在碰到的手机都还是整数，如华为的mate2为2,LG代工的nexus5为3，但以后碰到小数位的可能会有隐患
 //		int u = (int) density;
 		int u=3;
-		//相对于imageview的原点再平移一个(50,30)
-		left_up_x=(DpValue_left_up_x+50)*u;
+		//相对于imageview的原点再平移一个(20,30)
+		left_up_x=(DpValue_left_up_x+20)*u;
 		left_up_y=(DpValue_left_up_y+30)*u;
-		right_bottom_x=(DpValue_right_bottom_x+50)*u;
+		right_bottom_x=(DpValue_right_bottom_x+20)*u;
 		right_bottom_y=(DpValue_right_bottom_y+30)*u;
 		canvas.drawRect(new RectF(left_up_x,left_up_y,right_bottom_x,right_bottom_y), paint);
 	}

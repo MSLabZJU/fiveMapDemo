@@ -68,9 +68,9 @@ public class MapView extends View {
 	private void drawDpPoint(Canvas canvas,List<Point> points,Paint paint){
 		//现在碰到的手机都还是整数，如华为的mate2为2,LG代工的nexus5为3，但以后碰到小数位的可能会有隐患
 		int u = 3;
-		//相对于imageview的原点再平移一个(50,30)
+		//相对于imageview的原点再平移一个(20,30)
 		for(Point p:points){
-			x=(p.x+50)*u;
+			x=(p.x+20)*u;
 			y=(p.y+30)*u;
 			canvas.drawPoint(x,y,paint);
 		}
@@ -80,7 +80,7 @@ public class MapView extends View {
 		//现在碰到的手机都还是整数，如华为的mate2为2,LG代工的nexus5为3，但以后碰到小数位的可能会有隐患
 		int u = 3;
 		//相对于imageview的原点再平移一个(50,30)
-			x=(point.x+50)*u;
+			x=(point.x+20)*u;
 			y=(point.y+30)*u;
 			canvas.drawPoint(x,y,paint);
 	}

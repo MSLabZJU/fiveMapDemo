@@ -20,7 +20,7 @@
         android:id="@+id/map"
         android:layout_width="250dp"
         android:layout_height="500dp"
-        android:layout_marginLeft="50dp"
+        android:layout_marginLeft="20dp"
         android:layout_marginTop="30dp"
         android:background="@drawable/control_new_5f"
         android:contentDescription="@string/bgimg"
@@ -103,7 +103,7 @@
     <ImageView
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginLeft="50dp"
+        android:layout_marginLeft="20dp"
         android:layout_marginTop="30dp"
         android:background="@drawable/axis"
         android:contentDescription="@string/axis"
