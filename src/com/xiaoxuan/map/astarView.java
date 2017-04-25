@@ -14,64 +14,47 @@ import android.graphics.Paint.Style;
 import android.util.DisplayMetrics;
 import android.view.View;
 
-public class drawAstarPath extends View{
+public class astarView extends View{
 	private int x,y;
 	private Point src;
 	private Point dst;
-	private ArrayList<Point> barrierPoints;
 	private ArrayList<Point> path;
 	
 	//获取屏幕的像素点密度
 	DisplayMetrics metric = new DisplayMetrics();
 	private float density = metric.density;
 	
-	public drawAstarPath(Context context) {
+	public astarView(Context context) {
 		super(context);
 	}
 	
-	
-	//这里传入的数据也是除以5之后的
-	public drawAstarPath(Context context,Barrier barrier,Point src,Point dst) {
+	public astarView(Context context,Barrier barrier,Point src,Point dst) {
 		super(context);
-		this.barrierPoints = barrier.getBarrierPoint();
 		this.src = src;
 		this.dst = dst;
-		//这里面输入的src和dst必须是符合算法要求的
-		Pointmap test=new Pointmap(barrier,src,dst);
-		this.path = test.getPath();
+		GraphForAstar test = new GraphForAstar(10, 10, barrier, src, dst);
+		test.calculatePath();
+		this.path = test.getFinalPath();
 	}
 	
 	private void drawDpPoint(Canvas canvas,Point point,Paint paint){
 		int u = 3;
-		//相对于imageview的原点再平移一个(50,30)
-		x=(point.x+50)*u;
+		x=(point.x+20)*u;
 		y=(point.y+30)*u;
-		canvas.drawPoint(x*10,y*10,paint);
+		canvas.drawPoint(x,y,paint);
 	}
 	
-	private void drawDpPoint(Canvas canvas,Point[] points,Paint paint){
-		int u = 3;
-		//相对于imageview的原点再平移一个(50,30)
-		for(Point p:points){
-			x=(p.x+50)*u;
-			y=(p.y+30)*u;
-			canvas.drawPoint(x*10,y*10,paint);
-		}
-	}
 	
 	private void drawDpPoint(Canvas canvas,ArrayList<Point> points,Paint paint){
 		int u = 3;
-		//相对于imageview的原点再平移一个(50,30)
 		for(Point p:points){
-			x=(p.x+50)*u;
+			x=(p.x+20)*u;
 			y=(p.y+30)*u;
-			canvas.drawPoint(x*10,y*10,paint);
+			canvas.drawPoint(x,y,paint);
 		}
 	}
 	
 	
-	
-	@SuppressLint("DrawAllocation") @Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 

@@ -14,7 +14,7 @@ import com.tristan.fivemapdemo.R;
 import com.tristan.sqlhelper.DatabaseUtil;
 import com.tristan.sqlhelper.PointsData;
 import com.xiaoxuan.map.Barrier;
-import com.xiaoxuan.map.drawAstarPath;
+import com.xiaoxuan.map.astarView;
 
 import android.app.Activity;
 import android.content.Context;
@@ -54,7 +54,7 @@ public class MainActivity extends Activity {
 	private ToggleButton btn3;					//用于代码中画图的按钮
 	private Button btn4;						//初始化按钮
 	private Button btn5;						//用于测试A星算法的按钮
-	private drawAstarPath pathView;				//用于画出astar算法给出的路径
+	private astarView pathView;				//用于画出astar算法给出的路径
 	private TextView screenInfo;				//屏幕相关信息展示
 	private MapView draw_point;					//用来画测试图的view
 	private BoardView draw_board;				//用来画蒙板的view
@@ -244,13 +244,13 @@ public class MainActivity extends Activity {
 				Barrier test = new Barrier();
 				ArrayList<Point> testPoints = new ArrayList<Point>();
 				//添加从点(187,280)到(187,344)的障碍物
-				for (int i = 280/10; i < 345/10; i++) {
-					testPoints.add(new Point(187/10,i));
+				for (int i = 7; i < 7; i++) {
+					testPoints.add(new Point(5,i));
 				}
 				test.addBarrierPoint(testPoints);
-				Point src = new Point(187/10,280/10);
-				Point dst = new Point(187/10,344/10);
-				pathView = new drawAstarPath(MainActivity.this, test, src, dst);
+				Point src = new Point(3,6);
+				Point dst = new Point(7,6);
+				pathView = new astarView(MainActivity.this, test, src, dst);
 				fl.addView(pathView);
 			}
 		});

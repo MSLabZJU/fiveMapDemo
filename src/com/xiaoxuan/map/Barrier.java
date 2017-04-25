@@ -28,6 +28,6 @@ public class Barrier {
 	
 	//返回实例域的方法
 	public ArrayList<Point> getBarrierPoint(){
-		return (ArrayList<Point>) this.barrier.clone();
+		return this.barrier;
 	}
 }
