@@ -32,7 +32,7 @@ public class astarView extends View{
 		super(context);
 		this.src = src;
 		this.dst = dst;
-		GraphForAstar test = new GraphForAstar(10, 10, barrier, src, dst);
+		GraphForAstar test = new GraphForAstar(500, 250, barrier, src, dst);
 		test.calculatePath();
 		this.path = test.getFinalPath();
 	}

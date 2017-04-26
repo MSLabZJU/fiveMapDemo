@@ -14,6 +14,7 @@ import com.tristan.fivemapdemo.R;
 import com.tristan.sqlhelper.DatabaseUtil;
 import com.tristan.sqlhelper.PointsData;
 import com.xiaoxuan.map.Barrier;
+import com.xiaoxuan.map.GraphForAstar;
 import com.xiaoxuan.map.astarView;
 
 import android.app.Activity;
@@ -241,16 +242,13 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				Barrier test = new Barrier();
-				ArrayList<Point> testPoints = new ArrayList<Point>();
-				//添加从点(187,280)到(187,344)的障碍物
-				for (int i = 7; i < 7; i++) {
-					testPoints.add(new Point(5,i));
+				Barrier barrier = new Barrier();
+				for(int i = 100; i<400; i++){
+					barrier.addBarrierPoint(new Point(100,i));
 				}
-				test.addBarrierPoint(testPoints);
-				Point src = new Point(3,6);
-				Point dst = new Point(7,6);
-				pathView = new astarView(MainActivity.this, test, src, dst);
+				Point src = new Point(70,150);
+				Point dst = new Point(130,150);
+				pathView = new astarView(MainActivity.this, barrier, src, dst);
 				fl.addView(pathView);
 			}
 		});
