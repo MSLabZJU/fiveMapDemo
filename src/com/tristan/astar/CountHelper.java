@@ -1,4 +1,4 @@
-package com.xiaoxuan.map;
+package com.tristan.astar;
 
 
 //如果一个点加入了open，那么久记下那个点的唯一id，

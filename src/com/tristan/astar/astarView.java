@@ -1,4 +1,4 @@
-package com.xiaoxuan.map;
+package com.tristan.astar;
 
 import java.util.ArrayList;
 import java.util.List;

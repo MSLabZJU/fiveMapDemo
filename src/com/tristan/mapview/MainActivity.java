@@ -10,13 +10,13 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.tristan.astar.Barrier;
+import com.tristan.astar.GraphForAstar;
+import com.tristan.astar.TestForAstar;
+import com.tristan.astar.astarView;
 import com.tristan.fivemapdemo.R;
 import com.tristan.sqlhelper.DatabaseUtil;
 import com.tristan.sqlhelper.PointsData;
-import com.xiaoxuan.map.Barrier;
-import com.xiaoxuan.map.GraphForAstar;
-import com.xiaoxuan.map.TestForAstar;
-import com.xiaoxuan.map.astarView;
 
 import android.app.Activity;
 import android.content.Context;
