@@ -15,6 +15,7 @@ import com.tristan.sqlhelper.DatabaseUtil;
 import com.tristan.sqlhelper.PointsData;
 import com.xiaoxuan.map.Barrier;
 import com.xiaoxuan.map.GraphForAstar;
+import com.xiaoxuan.map.TestForAstar;
 import com.xiaoxuan.map.astarView;
 
 import android.app.Activity;
@@ -62,6 +63,7 @@ public class MainActivity extends Activity {
 	private BackgroundView draw_map;			//用来画地图的view
 	private ImageView map_bg;					//地图
 	private RadioGroup mapset;					//切换地图
+	private TestForAstar astarTest;				//测试
 	
 	//用来处理子线程送过来的消息
 	private Handler handler = new Handler(){
@@ -72,7 +74,7 @@ public class MainActivity extends Activity {
 			fl.addView(draw_point);
 		}
 	};
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
@@ -88,6 +90,7 @@ public class MainActivity extends Activity {
 		PointsData locPoint = new PointsData(this);
 		final List<Point> points = locPoint.getPointList();
 		//draw_point=new MapView(MainActivity.this,"test1",points);
+		
 		
 		
 		Thread getPoints = new Thread(new Runnable(){
@@ -242,14 +245,16 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				Barrier barrier = new Barrier();
-				for(int i = 100; i<400; i++){
-					barrier.addBarrierPoint(new Point(100,i));
-				}
-				Point src = new Point(70,150);
-				Point dst = new Point(130,150);
-				pathView = new astarView(MainActivity.this, barrier, src, dst);
-				fl.addView(pathView);
+//				Barrier barrier = new Barrier();
+//				for(int i = 100; i<400; i++){
+//					barrier.addBarrierPoint(new Point(100,i));
+//				}
+//				Point src = new Point(70,150);
+//				Point dst = new Point(130,150);
+//				pathView = new astarView(MainActivity.this, barrier, src, dst);
+//				fl.addView(pathView);
+				TestForAstar astarTest = new TestForAstar(MainActivity.this);
+				fl.addView(astarTest);
 			}
 		});
 		
@@ -261,6 +266,9 @@ public class MainActivity extends Activity {
 					break;
 				case R.id.btn_9_526:
 					map_bg.setBackgroundResource(R.drawable.map_9_526);
+					break;
+				case R.id.btn_script:
+					map_bg.setBackgroundResource(R.drawable.blank_map);
 					break;
 				default:
 					break;
