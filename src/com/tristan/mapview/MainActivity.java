@@ -36,6 +36,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -44,6 +46,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -61,8 +64,9 @@ public class MainActivity extends Activity {
 	private MapView draw_point;					//用来画测试图的view
 	private BoardView draw_board;				//用来画蒙板的view
 	private BackgroundView draw_map;			//用来画地图的view
+	
 	private ImageView map_bg;					//地图
-	private RadioGroup mapset;					//切换地图
+	private Spinner mapSet;
 	private TestForAstar astarTest;				//测试
 	
 	//用来处理子线程送过来的消息
@@ -166,7 +170,7 @@ public class MainActivity extends Activity {
 		btn3 = (ToggleButton) findViewById(R.id.btn_map);
 		btn4 = (Button) findViewById(R.id.btn_reset);
 		btn5 = (Button) findViewById(R.id.btn_astar);
-		mapset = (RadioGroup) findViewById(R.id.mapchoice);
+		mapSet = (Spinner) findViewById(R.id.spinner_map);
 		map_bg = (ImageView) findViewById(R.id.map);
 
 		
@@ -258,21 +262,31 @@ public class MainActivity extends Activity {
 			}
 		});
 		
-		mapset.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			public void onCheckedChanged(RadioGroup group, int checkedId) {
-				switch (checkedId) {
-				case R.id.btn_5f:
-					map_bg.setBackgroundResource(R.drawable.control_new_5f);
-					break;
-				case R.id.btn_9_526:
-					map_bg.setBackgroundResource(R.drawable.map_9_526);
-					break;
-				case R.id.btn_script:
-					map_bg.setBackgroundResource(R.drawable.blank_map);
-					break;
-				default:
-					break;
+
+		
+		mapSet.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			public void onItemSelected(AdapterView<?> parent, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub
+				switch (position) {
+					case 0:
+						map_bg.setBackgroundResource(R.drawable.control_new_5f);
+						break;
+					case 1:
+						map_bg.setBackgroundResource(R.drawable.map_9_526);
+						break;
+					case 2:
+						map_bg.setBackgroundResource(R.drawable.blank_map);
+						break;
+					default:
+						break;
 				}
+			};
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				// TODO Auto-generated method stub
 				
 			}
 		});
