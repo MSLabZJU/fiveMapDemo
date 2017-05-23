@@ -1,16 +1,14 @@
 package com.tristan.astar;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.Paint.Cap;
 import android.graphics.Paint.Style;
+import android.graphics.Point;
 import android.util.DisplayMetrics;
 import android.view.View;
 

@@ -2,12 +2,16 @@ package com.tristan.astar;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Set;
 
 import android.graphics.Point;
 
+/**
+ * 注意，在我这个程序里面,map_column对应的是x轴,map_row对应的是y轴
+ * @author TristanHuang
+ * 
+ * 2017-5-23 上午11:49:08
+ */
 
-//注意，在我这个程序里面,map_column对应的是x轴,map_row对应的是y轴
 public class GraphForAstar {
 	private int map_row, map_column;   	//地图大小
 	private int numOfPoints;			//点的总数

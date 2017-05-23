@@ -4,8 +4,13 @@ import java.util.ArrayList;
 
 import android.graphics.Point;
 
+/**
+ * 障碍物
+ * @author TristanHuang
+ * 
+ * 2017-5-23 上午11:50:42
+ */
 public class Barrier {
-    //封装好数据，设为private
 	private ArrayList<Point> barrier=new ArrayList<Point>();
     
 	//添加一个障碍点的方法

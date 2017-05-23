@@ -1,19 +1,23 @@
 package com.tristan.astar;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.Paint.Cap;
 import android.graphics.Paint.Style;
+import android.graphics.Point;
 import android.util.DisplayMetrics;
 import android.view.View;
 
+/**
+ * 生成astar算法得到的路径，后面要改为PointView的子类
+ * @author TristanHuang
+ * 
+ * 2017-5-23 上午11:51:04
+ */
 public class astarView extends View{
 	private int x,y;
 	private Point src;

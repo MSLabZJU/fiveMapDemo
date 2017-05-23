@@ -7,26 +7,12 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.List;
-
-import com.tristan.astar.Barrier;
-import com.tristan.astar.GraphForAstar;
-import com.tristan.astar.TestForAstar;
-import com.tristan.astar.astarView;
-import com.tristan.fivemapdemo.R;
-import com.tristan.sqlhelper.DatabaseUtil;
-import com.tristan.sqlhelper.PointsData;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.Paint.Style;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -34,22 +20,24 @@ import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RadioGroup;
-import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
+
+import com.tristan.astar.TestForAstar;
+import com.tristan.astar.astarView;
+import com.tristan.fivemapdemo.R;
+import com.tristan.sqlhelper.DatabaseUtil;
+import com.tristan.sqlhelper.PointsData;
 
 public class MainActivity extends Activity {
 	
@@ -94,7 +82,7 @@ public class MainActivity extends Activity {
 		final List<Point> points = locPoint.getPointList();
 		//draw_point=new MapView(MainActivity.this,"test1",points);
 		
-		
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);//∑¿÷π–›√ﬂ
 		
 		Thread getPoints = new Thread(new Runnable(){
 			public void run(){

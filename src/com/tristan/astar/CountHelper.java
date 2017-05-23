@@ -1,9 +1,13 @@
 package com.tristan.astar;
 
 
-//如果一个点加入了open，那么久记下那个点的唯一id，
-//方便后面直接寻找，避免了遍历所有的点
-
+/**
+ * 如果一个点加入了open，那么久记下那个点的唯一id
+ * 方便后面直接寻找，避免了遍历所有的点
+ * @author TristanHuang
+ * 
+ * 2017-5-23 上午11:50:12
+ */
 public class CountHelper {
 	private int index;
 	private int fatherIndex;
