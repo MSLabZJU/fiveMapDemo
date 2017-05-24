@@ -16,10 +16,8 @@ import android.view.View;
 
 
 
+public class MapView extends PointView{
 
-
-public class MapView extends View {
-	private float x=0, y=0;
 	//用于测试
 	private int test_flag; 
 
@@ -28,11 +26,7 @@ public class MapView extends View {
 	//存放从服务器拿到的点
 	Point testPoint;
 	
-	//获取屏幕的像素点密度
-	DisplayMetrics metric = new DisplayMetrics();
-	private float density = metric.density;
-	
-	
+
 	public MapView(Context context) {
 		super(context);
 	}
@@ -48,6 +42,7 @@ public class MapView extends View {
 		testPoints = (ArrayList<Point>) points;
 	}
 	
+	
 	//test_flag =1 , 如果从服务器接受数据，就调用这个构造器，每次接受一个点就画一个点
 	public MapView(Context context,String str,Point point){
 		super(context);
@@ -59,30 +54,43 @@ public class MapView extends View {
 	}
 	
 	
+	@Override
+	protected void onDraw(Canvas canvas) {
+		super.onDraw(canvas);
 
-	//根据屏幕的DPI重新封装drawPoint()方法，
-	//这里drawPoint()方法里所用的坐标单位是px，需要转化为dip/dp
-	//把需要画出来的点暂时放在数组points里，然后遍历画出来
-	private void drawDpPoint(Canvas canvas,List<Point> points,Paint paint){
-		//现在碰到的手机都还是整数，如华为的mate2为2,LG代工的nexus5为3，但以后碰到小数位的可能会有隐患
-		int u = 3;
-		//相对于imageview的原点再平移一个(20,30)
-		for(Point p:points){
-			x=(p.x+20)*u;
-			y=(p.y+30)*u;
-			canvas.drawPoint(x,y,paint);
+		// 设置图层的背景色
+		canvas.drawColor(Color.TRANSPARENT);
+		// 添加画笔
+		Paint paint_Line = new Paint();
+		paint_Line.setAntiAlias(true); // 抗锯齿
+		paint_Line.setStrokeWidth(2); // 设置画笔宽度
+		paint_Line.setStyle(Style.STROKE);
+		paint_Line.setColor(Color.BLUE); // 画笔的颜色
+
+		Paint paint_Point = new Paint();
+		paint_Point.setAntiAlias(true); // 抗锯齿
+		paint_Point.setStrokeWidth(8); // 设置画笔宽度
+		paint_Point.setStyle(Style.STROKE);
+		paint_Point.setColor(Color.RED); // 画笔的颜色
+		paint_Point.setStrokeCap(Cap.ROUND);//圆头的画笔头
+		
+		
+			
+		
+		switch (test_flag) {
+		case 0:          //从本地数据库拿到的点
+			drawDpPoint(canvas, testPoints, paint_Point);
+			break;
+		
+		case 1:          //从服务器请求得到点
+			drawDpPoint(canvas, testPoint, paint_Point);
+			break;
+		default:
+			break;
 		}
 	}
 	
-	private void drawDpPoint(Canvas canvas,Point point,Paint paint){
-		//现在碰到的手机都还是整数，如华为的mate2为2,LG代工的nexus5为3，但以后碰到小数位的可能会有隐患
-		int u = 3;
-		//相对于imageview的原点再平移一个(50,30)
-			x=(point.x+20)*u;
-			y=(point.y+30)*u;
-			canvas.drawPoint(x,y,paint);
-	}
-
+	
 	
 	/*
 	 * 所有用于展示的点
@@ -170,39 +178,4 @@ public class MapView extends View {
 	};*/
 	
 	
-	@Override
-	protected void onDraw(Canvas canvas) {
-		super.onDraw(canvas);
-
-		// 设置图层的背景色
-		canvas.drawColor(Color.TRANSPARENT);
-		// 添加画笔
-		Paint paint_Line = new Paint();
-		paint_Line.setAntiAlias(true); // 抗锯齿
-		paint_Line.setStrokeWidth(2); // 设置画笔宽度
-		paint_Line.setStyle(Style.STROKE);
-		paint_Line.setColor(Color.BLUE); // 画笔的颜色
-
-		Paint paint_Point = new Paint();
-		paint_Point.setAntiAlias(true); // 抗锯齿
-		paint_Point.setStrokeWidth(8); // 设置画笔宽度
-		paint_Point.setStyle(Style.STROKE);
-		paint_Point.setColor(Color.RED); // 画笔的颜色
-		paint_Point.setStrokeCap(Cap.ROUND);//圆头的画笔头
-		
-		
-			
-		
-		switch (test_flag) {
-		case 0:          //从本地数据库拿到的点
-			drawDpPoint(canvas, testPoints, paint_Point);
-			break;
-		
-		case 1:          //从服务器请求得到点
-			drawDpPoint(canvas, testPoint, paint_Point);
-			break;
-		default:
-			break;
-		}
-	}
 }

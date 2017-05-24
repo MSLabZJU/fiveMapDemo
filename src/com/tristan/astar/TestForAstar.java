@@ -2,6 +2,8 @@ package com.tristan.astar;
 
 import java.util.ArrayList;
 
+import com.tristan.mapview.PointView;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -12,18 +14,24 @@ import android.graphics.Point;
 import android.util.DisplayMetrics;
 import android.view.View;
 
-public class TestForAstar extends View{
-	private int x,y;
+
+/**
+ * 对A*算法做的一个测试
+ * @author TristanHuang
+ * 2017-5-24  上午10:56:36
+ */
+public class TestForAstar extends PointView{
 	private Point src;
 	private Point dst;
 	private ArrayList<Point> path;
 	private Barrier barrier;
 	private ArrayList<Point> barrierPath;
 	
-	//获取屏幕的像素点密度
-	DisplayMetrics metric = new DisplayMetrics();
-	private float density = metric.density;
 	
+	/**
+	 * 默认测试，起点写死的(75,350),终点(200,50)
+	 * @param context
+	 */
 	public TestForAstar(Context context) {
 		super(context);
 		initialBarrier();
@@ -35,6 +43,14 @@ public class TestForAstar extends View{
 		this.path = test.getFinalPath();
 	}
 	
+	
+	/**
+	 * 可变起点终点构造器
+	 * @param context
+	 * @param barrier 障碍物，写在这里类里面的
+	 * @param src (75,350)
+	 * @param dst (200,50)
+	 */
 	public TestForAstar(Context context,Barrier barrier,Point src,Point dst) {
 		super(context);
 		this.src = src;
@@ -44,24 +60,11 @@ public class TestForAstar extends View{
 		this.path = test.getFinalPath();
 	}
 	
-	private void drawDpPoint(Canvas canvas,Point point,Paint paint){
-		int u = 3;
-		x=(point.x+20)*u;
-		y=(point.y+30)*u;
-		canvas.drawPoint(x,y,paint);
-	}
 	
 	
-	private void drawDpPoint(Canvas canvas,ArrayList<Point> points,Paint paint){
-		int u = 3;
-		for(Point p:points){
-			x=(p.x+20)*u;
-			y=(p.y+30)*u;
-			canvas.drawPoint(x,y,paint);
-		}
-	}
-	
-	//初始化barrier类
+	/**
+	 * 添加和绘制障碍物点集
+	 */
 	private void initialBarrier(){
 		this.barrier = new Barrier();
 		for(int i = 100; i<=300 ; i++){

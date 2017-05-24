@@ -2,6 +2,8 @@ package com.tristan.astar;
 
 import java.util.ArrayList;
 
+import com.tristan.mapview.PointView;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -15,23 +17,29 @@ import android.view.View;
 /**
  * 生成astar算法得到的路径，后面要改为PointView的子类
  * @author TristanHuang
- * 
  * 2017-5-23 上午11:51:04
  */
-public class astarView extends View{
-	private int x,y;
+public class astarView extends PointView{
 	private Point src;
 	private Point dst;
 	private ArrayList<Point> path;
 	
-	//获取屏幕的像素点密度
-	DisplayMetrics metric = new DisplayMetrics();
-	private float density = metric.density;
 	
 	public astarView(Context context) {
 		super(context);
 	}
 	
+	
+	/**
+	 * 主要做了两件事：
+	 * 1. 传递参数给A*算法模块，开始运算
+	 * 2. 画出了障碍物（后面分离出来）
+	 * 3. 将运算结果发送给path保存下来
+	 * @param context
+	 * @param barrier
+	 * @param src
+	 * @param dst
+	 */
 	public astarView(Context context,Barrier barrier,Point src,Point dst) {
 		super(context);
 		this.src = src;
@@ -41,22 +49,6 @@ public class astarView extends View{
 		this.path = test.getFinalPath();
 	}
 	
-	private void drawDpPoint(Canvas canvas,Point point,Paint paint){
-		int u = 3;
-		x=(point.x+20)*u;
-		y=(point.y+30)*u;
-		canvas.drawPoint(x,y,paint);
-	}
-	
-	
-	private void drawDpPoint(Canvas canvas,ArrayList<Point> points,Paint paint){
-		int u = 3;
-		for(Point p:points){
-			x=(p.x+20)*u;
-			y=(p.y+30)*u;
-			canvas.drawPoint(x,y,paint);
-		}
-	}
 	
 	
 	protected void onDraw(Canvas canvas) {
@@ -67,16 +59,16 @@ public class astarView extends View{
 		// 添加画笔
 		Paint paint_Point = new Paint();
 		paint_Point.setAntiAlias(true); // 抗锯齿
-		paint_Point.setStrokeWidth(8); // 设置画笔宽度
+		paint_Point.setStrokeWidth(8); 
 		paint_Point.setStyle(Style.STROKE);
-		paint_Point.setColor(Color.RED); // 画笔的颜色
+		paint_Point.setColor(Color.RED); 
 		paint_Point.setStrokeCap(Cap.ROUND);//圆头的画笔头
 		
 		Paint paint_special = new Paint();
 		paint_Point.setAntiAlias(true); // 抗锯齿
-		paint_Point.setStrokeWidth(15); // 设置画笔宽度
+		paint_Point.setStrokeWidth(15); 
 		paint_Point.setStyle(Style.STROKE);
-		paint_Point.setColor(Color.BLUE); // 画笔的颜色
+		paint_Point.setColor(Color.BLUE); 
 		paint_Point.setStrokeCap(Cap.ROUND);//圆头的画笔头
 		
 		//用较粗的点画出起点和终点

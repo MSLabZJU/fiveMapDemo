@@ -9,31 +9,31 @@ import android.graphics.RectF;
 import android.util.DisplayMetrics;
 import android.view.View;
 
-public class BoardView extends View {
+
+/**
+ * BoardView类用来画矩形，画可行区域
+ * @author TristanHuang
+ * 2017-5-24  上午10:35:22
+ */
+public class BoardView extends PointView {
+	
+	public BoardView(Context context) {
+		super(context);
+	}
+
+
 	//矩形左上角的x,y坐标
 	private float left_up_x=0,left_up_y=0;
 	//矩形右下角的x,y坐标
 	private float right_bottom_x=0,right_bottom_y=0;
 	
-	//获取屏幕的像素点密度
-	DisplayMetrics metric = new DisplayMetrics();
-	private float density = metric.density;
-	
-	
-	public BoardView(Context context) {
-		super(context);
-		// TODO Auto-generated constructor stub
-	}
 	
 	//根据屏幕的DPI重新封装drawPoint()方法
 	private void drawDpRect(Canvas canvas,
 			float DpValue_left_up_x,float DpValue_left_up_y,
 			float DpValue_right_bottom_x,float DpValue_right_bottom_y,
 			Paint paint){
-		//现在碰到的手机都还是整数，如华为的mate2为2,LG代工的nexus5为3，但以后碰到小数位的可能会有隐患
-//		int u = (int) density;
 		int u=3;
-		//相对于imageview的原点再平移一个(20,30)
 		left_up_x=(DpValue_left_up_x+20)*u;
 		left_up_y=(DpValue_left_up_y+30)*u;
 		right_bottom_x=(DpValue_right_bottom_x+20)*u;
