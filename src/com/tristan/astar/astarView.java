@@ -37,8 +37,8 @@ public class astarView extends PointView{
 	 * 3. 将运算结果发送给path保存下来
 	 * @param context
 	 * @param barrier
-	 * @param src
-	 * @param dst
+	 * @param src  起点
+	 * @param dst  终点
 	 */
 	public astarView(Context context,Barrier barrier,Point src,Point dst) {
 		super(context);

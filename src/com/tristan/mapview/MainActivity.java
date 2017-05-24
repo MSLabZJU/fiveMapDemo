@@ -84,7 +84,7 @@ public class MainActivity extends Activity {
 		
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);//·ÀÖ¹ÐÝÃß
 		
-		Thread getPoints = new Thread(new Runnable(){
+		Thread getPoints = new Thread(new Runnable(){ 
 			public void run(){
 				Socket socket;
 				try {
@@ -160,7 +160,6 @@ public class MainActivity extends Activity {
 		mapSet = (Spinner) findViewById(R.id.spinner_map);
 		map_bg = (ImageView) findViewById(R.id.map);
 
-		
 		//btn1µÄ°´¼ü¼àÌý
 		btn1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

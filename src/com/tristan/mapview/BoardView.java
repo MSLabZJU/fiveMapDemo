@@ -33,7 +33,9 @@ public class BoardView extends PointView {
 			float DpValue_left_up_x,float DpValue_left_up_y,
 			float DpValue_right_bottom_x,float DpValue_right_bottom_y,
 			Paint paint){
-		int u=3;
+		DisplayMetrics metric = new DisplayMetrics();
+		float density = metric.density;
+		int u = (int) density;
 		left_up_x=(DpValue_left_up_x+20)*u;
 		left_up_y=(DpValue_left_up_y+30)*u;
 		right_bottom_x=(DpValue_right_bottom_x+20)*u;

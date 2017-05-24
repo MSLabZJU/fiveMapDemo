@@ -17,7 +17,7 @@ public class GraphForAstar {
 	private Barrier barrier;            //障碍物
 	private Point src;               	//起点
 	private Point dst; 					//终点
-	private ArrayList<Point> finalPath = new ArrayList<Point>(); //最终生成的路径
+	private ArrayList<Point> finalPath = new ArrayList<>(); //最终生成的路径
 	
 	//采用0/1数组表示，下标为每个Point的唯一id
 	private boolean[] open;   				//OPEN集,0代表不在,1代表在
@@ -29,8 +29,8 @@ public class GraphForAstar {
 	private float[] g;
 	private float[] h;
 	
-	private ArrayList<CountHelper> indexForOpen = new ArrayList<CountHelper>();
-	private ArrayList<CountHelper> indexForAll = new ArrayList<CountHelper>();
+	private ArrayList<CountHelper> indexForOpen = new ArrayList<>();
+	private ArrayList<CountHelper> indexForAll = new ArrayList<>();
 	
 	//构造器
 	public GraphForAstar(int map_row, int map_column, Barrier barrier, Point src, Point dst){

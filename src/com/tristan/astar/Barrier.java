@@ -10,7 +10,7 @@ import android.graphics.Point;
  * 2017-5-23 上午11:50:42
  */
 public class Barrier {
-	private ArrayList<Point> barrier=new ArrayList<Point>();
+	private ArrayList<Point> barrier=new ArrayList<>();
     
 	/**
 	 * 添加一个障碍点的方法
@@ -34,7 +34,7 @@ public class Barrier {
 	 * 添加一系列障碍点的方法
 	 * @param ps 类型是Point[]
 	 */
-	public void addBarrierPoint(Point[] ps){
+	public void addBarrierPoint(Point... ps){
 		for (Point point : ps) {
 			this.barrier.add(point);
 		}

@@ -118,12 +118,10 @@ public class TestForAstar extends PointView{
 		paintBarrier.setStrokeCap(Cap.ROUND);//圆头的画笔头
 		
 		//用较粗的点画出起点和终点
-		drawDpPoint(canvas, src, paint_Point);
-		drawDpPoint(canvas, dst, paint_Point);
-		drawDpPoint(canvas, this.barrierPath, paintBarrier);
+		drawDpPoint(canvas, paint_Point, src, dst);
+		drawDpPoint(canvas, paintBarrier, this.barrierPath);
 		//用较细的点画出astar算法给出的轨迹点
-		drawDpPoint(canvas, path, paint_Line);
-		
+		drawDpPoint(canvas, paint_Line, path);
 	}
 	
 }

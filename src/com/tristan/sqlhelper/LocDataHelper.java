@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 /**
  * 将assets中的db文件拷贝到databases中
  * @author TristanHuang
- * 
  * 2017-5-23 上午11:47:33
  */
 public class LocDataHelper extends SQLiteOpenHelper {
