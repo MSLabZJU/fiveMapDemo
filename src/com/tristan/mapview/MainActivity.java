@@ -118,10 +118,8 @@ public class MainActivity extends Activity {
 						}
 					}
 				} catch (UnknownHostException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -172,7 +170,6 @@ public class MainActivity extends Activity {
 								try {
 									Thread.sleep(300);
 								} catch (InterruptedException e) {
-									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
 								handler.sendMessage(msg);
@@ -254,7 +251,6 @@ public class MainActivity extends Activity {
 
 			public void onItemSelected(AdapterView<?> parent, View view,
 					int position, long id) {
-				// TODO Auto-generated method stub
 				switch (position) {
 					case 0:
 						map_bg.setBackgroundResource(R.drawable.control_new_5f);
@@ -272,7 +268,6 @@ public class MainActivity extends Activity {
 
 			@Override
 			public void onNothingSelected(AdapterView<?> parent) {
-				// TODO Auto-generated method stub
 				
 			}
 		});

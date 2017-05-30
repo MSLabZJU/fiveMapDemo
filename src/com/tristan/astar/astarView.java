@@ -2,8 +2,6 @@ package com.tristan.astar;
 
 import java.util.ArrayList;
 
-import com.tristan.mapview.PointView;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -11,8 +9,8 @@ import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.Paint.Style;
 import android.graphics.Point;
-import android.util.DisplayMetrics;
-import android.view.View;
+
+import com.tristan.mapview.PointView;
 
 /**
  * 生成astar算法得到的路径，后面要改为PointView的子类
@@ -50,7 +48,7 @@ public class astarView extends PointView{
 	}
 	
 	
-	
+
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 

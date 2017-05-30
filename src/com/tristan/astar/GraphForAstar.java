@@ -7,6 +7,8 @@ import android.graphics.Point;
 
 /**
  * 注意，在我这个程序里面,map_column对应的是x轴,map_row对应的是y轴
+ * TODO 用链表改写最终的path
+ * TODO 查看Point类生成hash code的方法是否只和坐标有关，如果是的话用HashSet改写集合open，close
  * @author TristanHuang
  * 2017-5-23 上午11:49:08
  */
@@ -62,6 +64,7 @@ public class GraphForAstar {
 		
 	}
 	
+
 	//计算出最后的路径
 	public void calculatePath(){
 		int src_id = getID(src);
@@ -90,6 +93,7 @@ public class GraphForAstar {
 		int loopIndex = dst_id;        //循环因子
 		while(loopIndex != src_id){
 			//进入搜索最终路径的循环
+			//TODO 把逆序的过程用ListIterator改写
 			for (CountHelper helper : indexForAll) {
 				if(helper.getIndex()== loopIndex){
 					loopIndex = helper.getFatherIndex();
