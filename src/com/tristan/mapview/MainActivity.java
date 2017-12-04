@@ -5,14 +5,20 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -31,6 +37,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.tristan.astar.TestForAstar;
@@ -38,9 +45,11 @@ import com.tristan.astar.astarView;
 import com.tristan.fivemapdemo.R;
 import com.tristan.sqlhelper.DatabaseUtil;
 import com.tristan.sqlhelper.PointsData;
+import com.tristan.test.anchorsView;
 
 public class MainActivity extends Activity {
 	
+	private Button btn_sound;
 	private ToggleButton btn1;					//测试按钮
 	private ToggleButton btn2;					//显示蒙版的状态切换按钮
 	private ToggleButton btn3;					//用于代码中画图的按钮
@@ -55,6 +64,24 @@ public class MainActivity extends Activity {
 	private ImageView map_bg;					//地图
 	private Spinner mapSet;
 	private TestForAstar astarTest;				//测试
+	
+	private ArrayList<Point> anchorPoints;
+	
+	
+	//用SoundPool播放声音
+	private SoundPool sp;
+	private HashMap<Integer,Integer> spMap;
+	
+	
+	public void playSounds (int sound, int number){	
+		//AudioManger对象通过getSystemService(Service.AUDIO_SERVICE)获取
+		AudioManager am = (AudioManager)this.getSystemService(this.AUDIO_SERVICE);  
+		//获得手机播放最大音乐音量
+		float audioMaxVolumn = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);  
+		//float audioCurrentVolumn = am.getStreamVolume(AudioManager.STREAM_MUSIC);  
+		float volumnRatio = audioMaxVolumn;  
+	    sp.play(spMap.get(sound), volumnRatio, volumnRatio, 1, number, 1);
+	}
 	
 	//用来处理子线程送过来的消息
 	private Handler handler = new Handler(){
@@ -82,20 +109,27 @@ public class MainActivity extends Activity {
 		final List<Point> points = locPoint.getPointList();
 		//draw_point=new MapView(MainActivity.this,"test1",points);
 		
+		sp = new SoundPool(7,AudioManager.STREAM_MUSIC,0);
+		spMap = new HashMap<Integer,Integer>();
+	    spMap.put(1, sp.load(this, R.raw.testsound, 1));
+		
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);//防止休眠
 		
 		Thread getPoints = new Thread(new Runnable(){ 
 			public void run(){
-				Socket socket;
+				Socket socket = new Socket();
 				try {
-					socket = new Socket("192.168.1.100",8888);
+					System.out.print("##########");
+					SocketAddress socAddress = new InetSocketAddress("192.168.1.102",9999);
+					socket.connect(socAddress, 1000);
 					BufferedReader bw = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
 					PrintWriter pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
-					pw.println("login");
+		/*			pw.println("login");
 					pw.println("林峰");
 					pw.println("666666");
-					pw.flush();
+					pw.flush();*/
 					String line = null;
+					System.out.println("#################################");
 					while((line = bw.readLine())!=null){
 						if("success".equals(line)){
 							while((line = bw.readLine())!=null){
@@ -127,7 +161,6 @@ public class MainActivity extends Activity {
 		
 		getPoints.start();
 
-
 	
 		
 		
@@ -149,7 +182,7 @@ public class MainActivity extends Activity {
        
 
        
-       
+       	btn_sound = (Button)findViewById(R.id.btn_sound);
 		btn1 = (ToggleButton) findViewById(R.id.btn_test);
 		btn2 = (ToggleButton) findViewById(R.id.btn_board);
 		btn3 = (ToggleButton) findViewById(R.id.btn_map);
@@ -157,6 +190,39 @@ public class MainActivity extends Activity {
 		btn5 = (Button) findViewById(R.id.btn_astar);
 		mapSet = (Spinner) findViewById(R.id.spinner_map);
 		map_bg = (ImageView) findViewById(R.id.map);
+		
+		anchorPoints = new ArrayList<Point>();
+		anchorPoints.add(new Point(50, 50));
+		anchorPoints.add(new Point(200, 50));
+		anchorPoints.add(new Point(50, 400));
+		anchorPoints.add(new Point(200, 400));
+		
+		btn_sound.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				anchorsView anchorsView = new anchorsView(MainActivity.this, anchorPoints);
+				fl.addView(anchorsView);
+				Thread soundTestThread = new Thread(new Runnable(){
+
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						while(true){
+							playSounds(1, 1);
+							try {
+								Thread.sleep(1000);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+					}
+					
+				});
+				soundTestThread.start();
+			}
+		});
 
 		//btn1的按键监听
 		btn1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
