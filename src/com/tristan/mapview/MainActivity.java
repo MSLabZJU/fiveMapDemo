@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,7 +46,7 @@ import com.tristan.astar.astarView;
 import com.tristan.fivemapdemo.R;
 import com.tristan.sqlhelper.DatabaseUtil;
 import com.tristan.sqlhelper.PointsData;
-import com.tristan.test.anchorsView;
+import com.tristan.test.AnchorsView;
 
 public class MainActivity extends Activity {
 	
@@ -124,10 +125,6 @@ public class MainActivity extends Activity {
 					socket.connect(socAddress, 1000);
 					BufferedReader bw = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
 					PrintWriter pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
-		/*			pw.println("login");
-					pw.println("林峰");
-					pw.println("666666");
-					pw.flush();*/
 					String line = null;
 					System.out.println("#################################");
 					while((line = bw.readLine())!=null){
@@ -138,13 +135,9 @@ public class MainActivity extends Activity {
 								int y = (int)Float.parseFloat(str[1]);
 								System.out.println("X:"+str[0]+",Y:"+str[1]);
 								Point point_get =new Point(x,y); 
-								points.add(point_get);
+								//points.add(point_get);
 								Message msg = new Message();
 								msg.obj = point_get;
-//								try {
-//									Thread.sleep(500);
-//								} catch (InterruptedException e) {
-//								}
 								handler.sendMessage(msg);
 							}
 						}
@@ -197,23 +190,22 @@ public class MainActivity extends Activity {
 		anchorPoints.add(new Point(50, 400));
 		anchorPoints.add(new Point(200, 400));
 		
+		Log.i("1212", "anchorPoints[3] = "+anchorPoints.get(3));
+		
 		btn_sound.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
-				anchorsView anchorsView = new anchorsView(MainActivity.this, anchorPoints);
-				fl.addView(anchorsView);
+				
 				Thread soundTestThread = new Thread(new Runnable(){
 
 					@Override
 					public void run() {
-						// TODO Auto-generated method stub
 						while(true){
 							playSounds(1, 1);
 							try {
 								Thread.sleep(1000);
 							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 						}
@@ -312,7 +304,7 @@ public class MainActivity extends Activity {
 		});
 		
 
-		
+		//设置Spinner的监听器，用于改变背景地图
 		mapSet.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			public void onItemSelected(AdapterView<?> parent, View view,
@@ -326,6 +318,9 @@ public class MainActivity extends Activity {
 						break;
 					case 2:
 						map_bg.setBackgroundResource(R.drawable.blank_map);
+						//添加锚节点的视图
+						AnchorsView anchorsView = new AnchorsView(MainActivity.this, anchorPoints);
+						fl.addView(anchorsView);
 						break;
 					default:
 						break;
