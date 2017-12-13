@@ -50,7 +50,8 @@ import com.tristan.test.AnchorsView;
 
 public class MainActivity extends Activity {
 	
-	private Button btn_sound;
+	private Button btn_connect;                  //用于与服务器建立连接
+	private ToggleButton btn_sound;
 	private ToggleButton btn1;					//测试按钮
 	private ToggleButton btn2;					//显示蒙版的状态切换按钮
 	private ToggleButton btn3;					//用于代码中画图的按钮
@@ -65,6 +66,8 @@ public class MainActivity extends Activity {
 	private ImageView map_bg;					//地图
 	private Spinner mapSet;
 	private TestForAstar astarTest;				//测试
+	
+	private boolean soundFlag;
 	
 	private ArrayList<Point> anchorPoints;
 	
@@ -116,7 +119,8 @@ public class MainActivity extends Activity {
 		
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);//防止休眠
 		
-		Thread getPoints = new Thread(new Runnable(){ 
+		// TODO 把这个类抽取出来
+		final Thread getPoints = new Thread(new Runnable(){ 
 			public void run(){
 				Socket socket = new Socket();
 				try {
@@ -152,7 +156,7 @@ public class MainActivity extends Activity {
 			}
 		});
 		
-		getPoints.start();
+		//getPoints.start();
 
 	
 		
@@ -174,8 +178,8 @@ public class MainActivity extends Activity {
 		
        
 
-       
-       	btn_sound = (Button)findViewById(R.id.btn_sound);
+       	btn_connect = (Button) findViewById(R.id.btn_connect);
+       	btn_sound = (ToggleButton)findViewById(R.id.btn_sound);
 		btn1 = (ToggleButton) findViewById(R.id.btn_test);
 		btn2 = (ToggleButton) findViewById(R.id.btn_board);
 		btn3 = (ToggleButton) findViewById(R.id.btn_map);
@@ -192,28 +196,40 @@ public class MainActivity extends Activity {
 		
 		Log.i("1212", "anchorPoints[3] = "+anchorPoints.get(3));
 		
-		btn_sound.setOnClickListener(new OnClickListener(){
-
+		btn_connect.setOnClickListener(new OnClickListener() {
+			
 			@Override
 			public void onClick(View v) {
-				
-				Thread soundTestThread = new Thread(new Runnable(){
-
-					@Override
-					public void run() {
-						while(true){
-							playSounds(1, 1);
-							try {
-								Thread.sleep(1000);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-						}
-					}
-					
-				});
-				soundTestThread.start();
+				getPoints.start();
 			}
+		});
+		
+		
+		//btn1的按键监听
+		btn_sound.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		    	if (isChecked) {
+		    		soundFlag = true;
+		    		Thread soundTestThread = new Thread(new Runnable(){
+
+		    			@Override
+		    			public void run() {
+		    				while(soundFlag){
+		    					playSounds(1, 1);
+		    					try {
+		    						Thread.sleep(1000);
+		    					} catch (InterruptedException e) {
+		    						e.printStackTrace();
+		    					}
+		    				}
+		    			}
+		    			
+		    		});
+					soundTestThread.start();
+		        } else {
+		            soundFlag = false;
+		        }
+		    }
 		});
 
 		//btn1的按键监听

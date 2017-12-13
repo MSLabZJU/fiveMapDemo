@@ -49,13 +49,20 @@
         android:layout_marginRight="5dp"
         android:orientation="vertical" >
 	    
-        
         <Button 
+            android:id="@+id/btn_connect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="0dp"
+            android:text="连接"/>
+        
+        <ToggleButton 
             android:id="@+id/btn_sound"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="0dp"
-            android:text="Test"/>
+            android:textOn="关闭"
+            android:textOff="发声"/>
         
      
         <ToggleButton
