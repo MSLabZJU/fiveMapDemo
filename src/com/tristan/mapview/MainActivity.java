@@ -120,30 +120,30 @@ public class MainActivity extends Activity {
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);//防止休眠
 		
 		// TODO 把这个类抽取出来
-		final Thread getPoints = new Thread(new Runnable(){ 
+		Thread getPoints = new Thread(new Runnable(){ 
 			public void run(){
 				Socket socket = new Socket();
 				try {
-					System.out.print("##########");
-					SocketAddress socAddress = new InetSocketAddress("192.168.1.102",9999);
+					Log.i("1213", "进入getPoints线程");
+					SocketAddress socAddress = new InetSocketAddress("192.168.1.103",9999);
 					socket.connect(socAddress, 1000);
+					Log.i("1213", "建立连接成功");
 					BufferedReader bw = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
 					PrintWriter pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
 					String line = null;
-					System.out.println("#################################");
 					while((line = bw.readLine())!=null){
 						if("success".equals(line)){
-							while((line = bw.readLine())!=null){
-								String[] str = line.split(" ");
-								int x = (int)Float.parseFloat(str[0]);
-								int y = (int)Float.parseFloat(str[1]);
-								System.out.println("X:"+str[0]+",Y:"+str[1]);
-								Point point_get =new Point(x,y); 
-								//points.add(point_get);
-								Message msg = new Message();
-								msg.obj = point_get;
-								handler.sendMessage(msg);
+							line = bw.readLine();
+							int size = Integer.parseInt(line);
+							int[] result = new int[size];
+							for(int i = 0; i<size; i++){
+								result[i] = (int) Float.parseFloat(bw.readLine());
 							}
+							Point point_get = new Point(result[0], result[1]);
+							Log.i("1213", point_get.toString());
+							Message msg = new Message();
+							msg.obj = point_get;
+							handler.sendMessage(msg);
 						}
 						else if("failed".equals(line)){
 						}
@@ -156,7 +156,7 @@ public class MainActivity extends Activity {
 			}
 		});
 		
-		//getPoints.start();
+		getPoints.start();
 
 	
 		
@@ -200,7 +200,7 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				getPoints.start();
+				//getPoints.start();
 			}
 		});
 		
