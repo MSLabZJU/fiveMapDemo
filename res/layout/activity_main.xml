@@ -22,7 +22,7 @@
         android:layout_height="500dp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="30dp"
-        android:background="@drawable/control_new_5f"
+        android:background="@drawable/blank_map"
         android:contentDescription="@string/bgimg"
         android:visibility="visible" />
 	
