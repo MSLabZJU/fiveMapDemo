@@ -2,6 +2,7 @@ package com.tristan.mapview;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -52,6 +53,7 @@ import com.tristan.fivemapdemo.R;
 import com.tristan.sqlhelper.DatabaseUtil;
 import com.tristan.sqlhelper.PointsData;
 import com.tristan.test.AnchorsView;
+import com.tristan.test.MyData;
 import com.tristan.test.Toolbox;
 
 public class MainActivity extends Activity {
@@ -79,6 +81,7 @@ public class MainActivity extends Activity {
 	private AnchorsView anchorsView; // 锚节点视图
 	
 	private String dataFileNameString; //记录文件名
+	OutputStreamWriter writer;
 
 	// 用SoundPool播放声音
 	private SoundPool sp;
@@ -107,10 +110,34 @@ public class MainActivity extends Activity {
 	// 用来处理子线程送过来的消息
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
-			Point this_point = (Point) msg.obj;
-			draw_point = new MapView(MainActivity.this, "test2", this_point);
-			FrameLayout fl = (FrameLayout) findViewById(R.id.outside);
-			fl.addView(draw_point);
+			MyData data = (MyData) msg.obj;
+			//创建数据写入流
+			try {
+				switch (data.getSize()){
+				case 1:
+					writer.append("SOUND;"+data.getTimestampSound()+"\n");
+					break;
+				case 2:
+					Point point = new Point((int)data.getX(), (int)data.getY());
+					draw_point = new MapView(MainActivity.this, "test2", point);
+					FrameLayout fl = (FrameLayout) findViewById(R.id.outside);
+					fl.addView(draw_point);
+					writer.append("POSI ;"+data.getTimestampX()+";"+data.getX()+";"+data.getTimestampY()+";"+data.getY()+";\n");
+					break;
+				case 3:
+					writer.append("TDOA ;"+data.getTimestamp1()+";"+data.getTdoaValue1()+";"
+							+data.getTimestamp2()+";"+data.getTdoaValue2()+";"
+							+data.getTimestamp3()+";"+data.getTdoaValue3()+";\n");
+					break;
+				}
+			} catch (FileNotFoundException e) {
+				Log.i("1213", "log文件尚未创建");
+				e.printStackTrace();
+			} catch (IOException e) {
+				Log.i("1213", "文件写入发生错误");
+				e.printStackTrace();
+			}
+			
 		}
 	};
 
@@ -168,8 +195,7 @@ public class MainActivity extends Activity {
 						Log.i("1213", "写入说明文件失败");
 						e.printStackTrace();
 					}
-					//创建数据写入流
-					OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(dataFileNameString, true));
+					writer = new OutputStreamWriter(new FileOutputStream(dataFileNameString, true));
 					BufferedReader bw = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
 					PrintWriter pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
 					String line = null;
@@ -177,25 +203,24 @@ public class MainActivity extends Activity {
 						if ("success".equals(line)) {
 							line = bw.readLine();
 							int size = Integer.parseInt(line);
-							if (size == 3) {
-								writer.append("TDOA;");
-							} else if (size == 2) {
-								writer.append("POSI;");
-							}
-							int[] result = new int[size];
+							double[] result = new double[size];
 							long[] timestamp = new long[size];
 							for (int i = 0; i < size; i++) {
-								result[i] = (int) Float.parseFloat(bw.readLine());
-								timestamp[i] =  System.currentTimeMillis()/1000;  //数值为1970.1.1到现在的秒数
-								writer.append(timestamp[i]+";"+result[i]+";");
+								result[i] = Double.parseDouble(bw.readLine());
+								timestamp[i] =  System.currentTimeMillis();  //数值为1970.1.1到现在的毫秒数
 								Log.i("1213", timestamp[i]+";"+result[i]+";");
 							}
-							writer.append("\n"); //换行
-							Point point_get = new Point(result[0], result[1]);
-							Log.i("1213", point_get.toString());
-							Message msg = new Message();
-							msg.obj = point_get;
-							handler.sendMessage(msg);
+							if (size == 2){
+								MyData data = new MyData(2,timestamp[0],result[0],timestamp[1],result[1]);
+								Message msg = new Message();
+								msg.obj = data;
+								handler.sendMessage(msg);
+							} else if (size == 3) {
+								MyData data = new MyData(3,timestamp[0],result[0],timestamp[1],result[1],timestamp[2],result[2]);
+								Message msg = new Message();
+								msg.obj = data;
+								handler.sendMessage(msg);
+							}
 						} else if ("failed".equals(line)) {
 							//do nothing
 						}
@@ -256,6 +281,12 @@ public class MainActivity extends Activity {
 						public void run() {
 							while (soundFlag) {
 								playSounds(1, 1);
+								long timestampSound = System.currentTimeMillis();
+								MyData data = new MyData(1,timestampSound);
+								Message msg = new Message();
+								msg.obj = data;
+								handler.sendMessage(msg);
+								Log.i("1213", "成功发送数据");
 								try {
 									Thread.sleep(1000);
 								} catch (InterruptedException e) {

@@ -81,8 +81,10 @@ public class Toolbox {
 		osw.append("% The Manufacturer:     "+android.os.Build.MANUFACTURER+"\n");
 		osw.append("% \n");
 		osw.append("% LogFile Data format:\n");
-		osw.append("% POSI data: 	'POSI;AppTimestamp1(s);TDOAValue1(m);AppTimestamp2(s);TDOAValue2(m);AppTimestamp3(s);TDOAValue3(m);'\n");
-		osw.append("% TDOA data: 	'TDOA;AppTimestamp1(s);TDOAValue1(m);AppTimestamp2(s);TDOAValue2(m);AppTimestamp3(s);TDOAValue3(m);'\n");
+		osw.append("% POSI  data: 	'POSI ;AppTimestamp1(ms);TDOAValue1(m);AppTimestamp2(ms);TDOAValue2(m);AppTimestamp3(ms);TDOAValue3(m);'\n");
+		osw.append("% TDOA  data: 	'TDOA ;AppTimestamp1(ms);TDOAValue1(m);AppTimestamp2(ms);TDOAValue2(m);AppTimestamp3(ms);TDOAValue3(m);'\n");
+		osw.append("% PDR   data: 	'PDR  ;StepNumber(count);StepLength(m);Orientation(degree);AppTimestamp(ms);'\n");
+		osw.append("% SOUND data: 	'SOUND;StepNumber(count);AppTimestamp(ms);'\n");
 		osw.append("% \n");
 		osw.close();
 		fos.close();
