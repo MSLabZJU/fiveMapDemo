@@ -10,9 +10,9 @@ import android.content.Context;
 
 /**
  * 将assets中的db文件拷贝到databases中
- * @author Botision.Huang
- * @Date: 2015-8-18 下午4:11:24
- * @Descp: TODO
+ * @author TristanHuang
+ * 
+ * 2017-5-23 上午11:47:12
  */
 public class DatabaseUtil {
 

@@ -4,12 +4,17 @@ package com.tristan.sqlhelper;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Point;
 
+/**
+ * 
+ * @author TristanHuang
+ * 
+ * 2017-5-23 ионГ11:48:04
+ */
 public class PointsData {
 
     private LocDataHelper helper;

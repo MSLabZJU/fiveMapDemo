@@ -2,19 +2,24 @@ package com.tristan.astar;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Set;
 
 import android.graphics.Point;
 
+/**
+ * 注意，在我这个程序里面,map_column对应的是x轴,map_row对应的是y轴
+ * TODO 用链表改写最终的path
+ * TODO 查看Point类生成hash code的方法是否只和坐标有关，如果是的话用HashSet改写集合open，close
+ * @author TristanHuang
+ * 2017-5-23 上午11:49:08
+ */
 
-//注意，在我这个程序里面,map_column对应的是x轴,map_row对应的是y轴
 public class GraphForAstar {
 	private int map_row, map_column;   	//地图大小
 	private int numOfPoints;			//点的总数
 	private Barrier barrier;            //障碍物
 	private Point src;               	//起点
 	private Point dst; 					//终点
-	private ArrayList<Point> finalPath = new ArrayList<Point>(); //最终生成的路径
+	private ArrayList<Point> finalPath = new ArrayList<>(); //最终生成的路径
 	
 	//采用0/1数组表示，下标为每个Point的唯一id
 	private boolean[] open;   				//OPEN集,0代表不在,1代表在
@@ -26,8 +31,8 @@ public class GraphForAstar {
 	private float[] g;
 	private float[] h;
 	
-	private ArrayList<CountHelper> indexForOpen = new ArrayList<CountHelper>();
-	private ArrayList<CountHelper> indexForAll = new ArrayList<CountHelper>();
+	private ArrayList<CountHelper> indexForOpen = new ArrayList<>();
+	private ArrayList<CountHelper> indexForAll = new ArrayList<>();
 	
 	//构造器
 	public GraphForAstar(int map_row, int map_column, Barrier barrier, Point src, Point dst){
@@ -59,6 +64,7 @@ public class GraphForAstar {
 		
 	}
 	
+
 	//计算出最后的路径
 	public void calculatePath(){
 		int src_id = getID(src);
@@ -87,6 +93,7 @@ public class GraphForAstar {
 		int loopIndex = dst_id;        //循环因子
 		while(loopIndex != src_id){
 			//进入搜索最终路径的循环
+			//TODO 把逆序的过程用ListIterator改写
 			for (CountHelper helper : indexForAll) {
 				if(helper.getIndex()== loopIndex){
 					loopIndex = helper.getFatherIndex();

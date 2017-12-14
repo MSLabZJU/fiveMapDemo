@@ -22,7 +22,7 @@
         android:layout_height="500dp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="30dp"
-        android:background="@drawable/control_new_5f"
+        android:background="@drawable/blank_map"
         android:contentDescription="@string/bgimg"
         android:visibility="visible" />
 	
@@ -48,6 +48,22 @@
         android:layout_gravity="right|center_vertical"
         android:layout_marginRight="5dp"
         android:orientation="vertical" >
+	    
+        <Button 
+            android:id="@+id/btn_connect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="0dp"
+            android:text="连接"/>
+        
+        <ToggleButton 
+            android:id="@+id/btn_sound"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="0dp"
+            android:textOn="关闭"
+            android:textOff="发声"/>
+        
      
         <ToggleButton
             android:id="@+id/btn_test"
@@ -109,6 +125,7 @@
         android:layout_marginLeft="40dp" />
 
 	<!-- 屏幕最下方是对手机屏幕信息的相关显示，不同手机显示不同内容 -->
+	
     <TextView
         android:id="@+id/screenInfo"
         android:layout_width="wrap_content"

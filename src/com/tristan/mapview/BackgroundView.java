@@ -4,19 +4,23 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.Paint.Cap;
 import android.graphics.Paint.Style;
+import android.graphics.Point;
 import android.util.DisplayMetrics;
 import android.view.View;
 
-public class BackgroundView extends View{
+
+
+/**
+ * 本来是准备通过程序画出地图的，但是后来发现没必要，可以再补充一下
+ * @author TristanHuang
+ * @deprecated
+ * 2017-5-24  上午10:39:01
+ */
+public class BackgroundView extends PointView{
 	private int x,y;
-	
-	//获取屏幕的像素点密度
-	DisplayMetrics metric = new DisplayMetrics();
-	private float density = metric.density;
-	
+
 	public BackgroundView(Context context) {
 		super(context);
 	}
@@ -24,15 +28,12 @@ public class BackgroundView extends View{
 	
 	//drawDpLine()接收由几个点组成的Point[]数组，然后连线
 	private void drawDpLine(Canvas canvas,Point[] points,Paint paint){
-		//现在碰到的手机都还是整数，如华为的mate2为2,LG代工的nexus5为3，但以后碰到小数位的可能会有隐患
-//		int den = (int) density;
 		int den = 3;
-		//相对于imageview的原点再平移一个(50,30)
 		int len = points.length;
 		for(int count=0; count < (len-1) ;count++){
-			x=(points[count].x+50)*den;
+			x=(points[count].x+20)*den;
 			y=(points[count].y+30)*den;
-			int x_next = (points[count+1].x+50)*den;
+			int x_next = (points[count+1].x+20)*den;
 			int y_next = (points[count+1].y+30)*den;
 			canvas.drawLine(x, y, x_next, y_next, paint);
 		}

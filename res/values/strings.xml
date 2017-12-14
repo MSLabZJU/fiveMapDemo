@@ -8,9 +8,9 @@
     <string name="axis">this is the axis</string>
     
     <string-array name="map_array">
+        <item>演示系统</item>
         <item>新楼5F</item>
         <item>教九526</item>
-        <item>Script</item>
     </string-array>
 
 </resources>
