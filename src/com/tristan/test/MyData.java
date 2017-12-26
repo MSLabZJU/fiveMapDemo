@@ -18,6 +18,11 @@ public class MyData {
 	private long timestampX;
 	private long timestampY;
 	
+	private long timestampPDR;
+	private int stepNumber;
+	private float stepLength;
+	private float orientation;
+	
 	public MyData(int size, long timestamp1, double tdoaValue1, long timestamp2, double tdoaValue2, long timestamp3, double tdoaValue3){
 		this.size = size;
 		this.tdoaValue1 = tdoaValue1;
@@ -36,6 +41,14 @@ public class MyData {
 		this.timestampY = timestampY;
 	}
 	
+	public MyData(int size, long timestampPDR, int stepNumber, float stepLength, float orientation){
+		this.size = size;
+		this.timestampPDR = timestampPDR;
+		this.stepNumber = stepNumber;
+		this.stepLength = stepLength;
+		this.orientation = orientation;
+	}
+	
 	public MyData(int size, long timestampSound){
 		this.size = size;
 		this.timestampSound = timestampSound;
@@ -51,6 +64,23 @@ public class MyData {
 	
 	public double getTdoaValue2() {
 		return tdoaValue2;
+	}
+
+	public long getTimestampPDR() {
+		return timestampPDR;
+	}
+
+	public int getStepNumber() {
+		return stepNumber;
+	}
+
+
+	public float getStepLength() {
+		return stepLength;
+	}
+
+	public float getOrientation() {
+		return orientation;
 	}
 
 	public double getTdoaValue3() {

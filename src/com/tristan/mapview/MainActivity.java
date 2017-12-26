@@ -47,6 +47,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.ivan.particleFilter.ParticleFilter;
+import com.ivan.pdr.GyroscopeOrientation;
+import com.ivan.pdr.Orientation;
+import com.ivan.pdr.PositionEstimate;
+import com.ivan.pdr.StepDetector;
 import com.tristan.astar.TestForAstar;
 import com.tristan.astar.astarView;
 import com.tristan.fivemapdemo.R;
@@ -57,40 +62,53 @@ import com.tristan.test.MyData;
 import com.tristan.test.Toolbox;
 
 public class MainActivity extends Activity {
+	private static int numParticles = 200;	
+	private int mStepNumber = 0;	//æ¿®æ¿„å„²é†ï¿½
+	private int mFormerStepNumber = 0;		
+    private float[] vOrientation = new float[3];	//é–ºå‚œæ‡“é®ï¿½
+    private float[] mPosition = new float[2];
+    private float[] mIndoorPosition = new float[2];
+    protected Runnable mRunable;
+    protected Handler mHandler;
+    
+    private Orientation mOrientation;	//é–ºå‚œæ‡“é®ï¿½
+    private StepDetector mStepDetector;		//é ä½²å‰é¡’ï¿½
+    private PositionEstimate mPositionEstimate;		//å¨´ï½…ç§¶é¤å—˜å¯¼é·å²Šå€
+    private ParticleFilter mParticleFilter;
 
-	private Button btn_connect; // ÓÃÓÚÓë·şÎñÆ÷½¨Á¢Á¬½Ó
+	private Button btn_connect; // ç”¨äºä¸æœåŠ¡å™¨å»ºç«‹è¿æ¥
 	private ToggleButton btn_sound;
-	private ToggleButton btn1; // ²âÊÔ°´Å¥
-	private ToggleButton btn2; // ÏÔÊ¾ÃÉ°æµÄ×´Ì¬ÇĞ»»°´Å¥
-	private ToggleButton btn3; // ÓÃÓÚ´úÂëÖĞ»­Í¼µÄ°´Å¥
-	private Button btn4; // ³õÊ¼»¯°´Å¥
-	private Button btn5; // ÓÃÓÚ²âÊÔAĞÇËã·¨µÄ°´Å¥
-	private astarView pathView; // ÓÃÓÚ»­³öastarËã·¨¸ø³öµÄÂ·¾¶
-	private TextView screenInfo; // ÆÁÄ»Ïà¹ØĞÅÏ¢Õ¹Ê¾
-	private MapView draw_point; // ÓÃÀ´»­²âÊÔÍ¼µÄview
-	private BoardView draw_board; // ÓÃÀ´»­ÃÉ°åµÄview
-	private BackgroundView draw_map; // ÓÃÀ´»­µØÍ¼µÄview
+	private ToggleButton btn1; // æµ‹è¯•æŒ‰é’®
+	private ToggleButton btn2; // æ˜¾ç¤ºè’™ç‰ˆçš„çŠ¶æ€åˆ‡æ¢æŒ‰é’®
+	private ToggleButton btn3; // ç”¨äºä»£ç ä¸­ç”»å›¾çš„æŒ‰é’®
+	private Button btn4; // åˆå§‹åŒ–æŒ‰é’®
+	private Button btn5; // ç”¨äºæµ‹è¯•Aæ˜Ÿç®—æ³•çš„æŒ‰é’®
+	private astarView pathView; // ç”¨äºç”»å‡ºastarç®—æ³•ç»™å‡ºçš„è·¯å¾„
+	private TextView screenInfo; // å±å¹•ç›¸å…³ä¿¡æ¯å±•ç¤º
+	private MapView draw_point; // ç”¨æ¥ç”»æµ‹è¯•å›¾çš„view
+	private BoardView draw_board; // ç”¨æ¥ç”»è’™æ¿çš„view
+	private BackgroundView draw_map; // ç”¨æ¥ç”»åœ°å›¾çš„view
 
-	private ImageView map_bg; // µØÍ¼
+	private ImageView map_bg; // åœ°å›¾
 	private Spinner mapSet;
-	private TestForAstar astarTest; // ²âÊÔ
+	private TestForAstar astarTest; // æµ‹è¯•
 
 	private boolean soundFlag;
 
-	private ArrayList<Point> anchorPoints; // Ãª½Úµã×ø±ê
-	private AnchorsView anchorsView; // Ãª½ÚµãÊÓÍ¼
+	private ArrayList<Point> anchorPoints; // é”šèŠ‚ç‚¹åæ ‡
+	private AnchorsView anchorsView; // é”šèŠ‚ç‚¹è§†å›¾
 	
-	private String dataFileNameString; //¼ÇÂ¼ÎÄ¼şÃû
+	private String dataFileNameString; //è®°å½•æ–‡ä»¶å
 	OutputStreamWriter writer;
 
-	// ÓÃSoundPool²¥·ÅÉùÒô
+	// ç”¨SoundPoolæ’­æ”¾å£°éŸ³
 	private SoundPool sp;
 	private HashMap<Integer, Integer> spMap;
 
 	public void playSounds(int sound, int number) {
-		// AudioManger¶ÔÏóÍ¨¹ıgetSystemService(Service.AUDIO_SERVICE)»ñÈ¡
+		// AudioMangerå¯¹è±¡é€šè¿‡getSystemService(Service.AUDIO_SERVICE)è·å–
 		AudioManager am = (AudioManager) this.getSystemService(this.AUDIO_SERVICE);
-		// »ñµÃÊÖ»ú²¥·Å×î´óÒôÀÖÒôÁ¿
+		// è·å¾—æ‰‹æœºæ’­æ”¾æœ€å¤§éŸ³ä¹éŸ³é‡
 		float audioMaxVolumn = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 		// float audioCurrentVolumn =
 		// am.getStreamVolume(AudioManager.STREAM_MUSIC);
@@ -99,19 +117,19 @@ public class MainActivity extends Activity {
 	}
 
 	private void mkLogDir() {
-		// ½¨Á¢¸ùÄ¿Â¼ÏÂµÄlogfilesÎÄ¼ş¼Ğ
+		// å»ºç«‹æ ¹ç›®å½•ä¸‹çš„logfilesæ–‡ä»¶å¤¹
 		String dataDirString = Toolbox.getSDPath().toString() + File.separator + "loc_logfiles";
 		File dataDirFile = new File(dataDirString);
 		dataDirFile.mkdir();
-		Log.i("1213", "loc_logfilesÎÄ¼ş¼Ğ´´½¨³É¹¦");
+		Log.i("1213", "loc_logfilesæ–‡ä»¶å¤¹åˆ›å»ºæˆåŠŸ");
 	}
 	
 	
-	// ÓÃÀ´´¦Àí×ÓÏß³ÌËÍ¹ıÀ´µÄÏûÏ¢
-	private Handler handler = new Handler() {
+	// ç”¨æ¥å¤„ç†å­çº¿ç¨‹é€è¿‡æ¥çš„æ¶ˆæ¯
+	public Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			MyData data = (MyData) msg.obj;
-			//´´½¨Êı¾İĞ´ÈëÁ÷
+			//åˆ›å»ºæ•°æ®å†™å…¥æµ
 			try {
 				switch (data.getSize()){
 				case 1:
@@ -129,12 +147,17 @@ public class MainActivity extends Activity {
 							+data.getTimestamp2()+";"+data.getTdoaValue2()+";"
 							+data.getTimestamp3()+";"+data.getTdoaValue3()+";\n");
 					break;
+				case 4:
+					Log.d("PDRMessage", "PDRMessage: " + data.getOrientation() + " "
+							+ data.getStepLength() + " " + data.getStepNumber() + " "
+							+ data.getTimestampPDR());
+					break;
 				}
 			} catch (FileNotFoundException e) {
-				Log.i("1213", "logÎÄ¼şÉĞÎ´´´½¨");
+				Log.i("1213", "logæ–‡ä»¶å°šæœªåˆ›å»º");
 				e.printStackTrace();
 			} catch (IOException e) {
-				Log.i("1213", "ÎÄ¼şĞ´Èë·¢Éú´íÎó");
+				Log.i("1213", "æ–‡ä»¶å†™å…¥å‘ç”Ÿé”™è¯¯");
 				e.printStackTrace();
 			}
 			
@@ -159,11 +182,16 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
-
-		// »ñÈ¡Ö¡²¼¾Ö¶ÔÏó£¬²¢ÉèÖÃÆä±³¾°Í¼
+		
+		startSensor();
+		
+        mOrientation.onResume();
+        mStepDetector.onResume();
+        
+		// è·å–å¸§å¸ƒå±€å¯¹è±¡ï¼Œå¹¶è®¾ç½®å…¶èƒŒæ™¯å›¾
 		final FrameLayout fl = (FrameLayout) findViewById(R.id.outside);
 
-		// ½«assetsÖĞµÄÍâ²¿dbÎÄ¼ş¿½±´µ½data/data/databasesÖĞ
+		// å°†assetsä¸­çš„å¤–éƒ¨dbæ–‡ä»¶æ‹·è´åˆ°data/data/databasesä¸­
 		DatabaseUtil.packDataBase(this);
 		PointsData locPoint = new PointsData(this);
 		final List<Point> points = locPoint.getPointList();
@@ -174,25 +202,25 @@ public class MainActivity extends Activity {
 		spMap.put(1, sp.load(this, R.raw.testsound, 1));
 
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
-				WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);// ·ÀÖ¹ĞİÃß
+				WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);// é˜²æ­¢ä¼‘çœ 
 
-		mkLogDir(); // ´´½¨ÈÕÖ¾ÎÄ¼ş¼Ğ
+		mkLogDir(); // åˆ›å»ºæ—¥å¿—æ–‡ä»¶å¤¹
 
-		// TODO °ÑÕâ¸öÀà³éÈ¡³öÀ´
+		// TODO æŠŠè¿™ä¸ªç±»æŠ½å–å‡ºæ¥
 		Thread getPoints = new Thread(new Runnable() {
 			public void run() {
 				Socket socket = new Socket();
 				try {
-					Log.i("1213", "½øÈëgetPointsÏß³Ì");
+					Log.i("1213", "è¿›å…¥getPointsçº¿ç¨‹");
 					SocketAddress socAddress = new InetSocketAddress("192.168.1.103", 9999);
 					socket.connect(socAddress, 1000);
-					Log.i("1213", "½¨Á¢Á¬½Ó³É¹¦");
-					//Ã¿´ÎÒ»½øÈë³ÌĞò¾Í»á´´½¨Ò»¸öĞÂµÄÎÄ¼ş£¬ÒÔµ±Ç°ÏµÍ³Ê±¼äÃüÃû
+					Log.i("1213", "å»ºç«‹è¿æ¥æˆåŠŸ");
+					//æ¯æ¬¡ä¸€è¿›å…¥ç¨‹åºå°±ä¼šåˆ›å»ºä¸€ä¸ªæ–°çš„æ–‡ä»¶ï¼Œä»¥å½“å‰ç³»ç»Ÿæ—¶é—´å‘½å
 					dataFileNameString = Toolbox.getFileNameString();
 					try {
 						Toolbox.writeExperimentInfo(dataFileNameString);
 					} catch (IOException e) {
-						Log.i("1213", "Ğ´ÈëËµÃ÷ÎÄ¼şÊ§°Ü");
+						Log.i("1213", "å†™å…¥è¯´æ˜æ–‡ä»¶å¤±è´¥");
 						e.printStackTrace();
 					}
 					writer = new OutputStreamWriter(new FileOutputStream(dataFileNameString, true));
@@ -207,7 +235,7 @@ public class MainActivity extends Activity {
 							long[] timestamp = new long[size];
 							for (int i = 0; i < size; i++) {
 								result[i] = Double.parseDouble(bw.readLine());
-								timestamp[i] =  System.currentTimeMillis();  //ÊıÖµÎª1970.1.1µ½ÏÖÔÚµÄºÁÃëÊı
+								timestamp[i] =  System.currentTimeMillis();  //æ•°å€¼ä¸º1970.1.1åˆ°ç°åœ¨çš„æ¯«ç§’æ•°
 								Log.i("1213", timestamp[i]+";"+result[i]+";");
 							}
 							if (size == 2){
@@ -236,22 +264,22 @@ public class MainActivity extends Activity {
 
 		getPoints.start();
 
-		// »ñÈ¡ÆÁÄ»µÄ·Ö±æÂÊ
+		// è·å–å±å¹•çš„åˆ†è¾¨ç‡
 		DisplayMetrics metric = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metric);
 
-		// »ªÎªmate2¿íÎª720px£¬¸ß¶ÈÎª1208px
-		// nexus5¿íÎª1080px,¸ß¶ÈÎª1776px
-		int width = metric.widthPixels; // ÆÁÄ»¿í¶È£¨ÏñËØ£©
-		int height = metric.heightPixels; // ÆÁÄ»¸ß¶È£¨ÏñËØ£©
-		// »ªÎªµÄmate2²âÊÔÃÜ¶ÈÎª2.0
-		// nexus5²âÊÔÃÜ¶ÈÎª3.0
-		float density = metric.density; // ÆÁÄ»ÃÜ¶È£¨0.75 / 1.0 / 1.5/ 2.0£©
-		int densityDpi = metric.densityDpi; // ÆÁÄ»ÃÜ¶ÈDPI£¨120 / 160 / 240£©
+		// åä¸ºmate2å®½ä¸º720pxï¼Œé«˜åº¦ä¸º1208px
+		// nexus5å®½ä¸º1080px,é«˜åº¦ä¸º1776px
+		int width = metric.widthPixels; // å±å¹•å®½åº¦ï¼ˆåƒç´ ï¼‰
+		int height = metric.heightPixels; // å±å¹•é«˜åº¦ï¼ˆåƒç´ ï¼‰
+		// åä¸ºçš„mate2æµ‹è¯•å¯†åº¦ä¸º2.0
+		// nexus5æµ‹è¯•å¯†åº¦ä¸º3.0
+		float density = metric.density; // å±å¹•å¯†åº¦ï¼ˆ0.75 / 1.0 / 1.5/ 2.0ï¼‰
+		int densityDpi = metric.densityDpi; // å±å¹•å¯†åº¦DPIï¼ˆ120 / 160 / 240ï¼‰
 		screenInfo = (TextView) findViewById(R.id.screenInfo);
-		screenInfo.setText("¿í¶È£º" + width + "  ¸ß¶È£º" + height + "  ÃÜ¶È£º" + density + "  DPI£º" + densityDpi);
+		screenInfo.setText("å®½åº¦ï¼š" + width + "  é«˜åº¦ï¼š" + height + "  å¯†åº¦ï¼š" + density + "  DPIï¼š" + densityDpi);
 
-		bindElement();// °ó¶¨½çÃæÉÏµÄÔªËØ
+		bindElement();// ç»‘å®šç•Œé¢ä¸Šçš„å…ƒç´ 
 
 		anchorPoints = new ArrayList<Point>();
 		anchorPoints.add(new Point(50, 50));
@@ -270,7 +298,7 @@ public class MainActivity extends Activity {
 			}
 		});
 
-		// btn1µÄ°´¼ü¼àÌı
+		// btn1çš„æŒ‰é”®ç›‘å¬
 		btn_sound.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				if (isChecked) {
@@ -282,11 +310,10 @@ public class MainActivity extends Activity {
 							while (soundFlag) {
 								playSounds(1, 1);
 								long timestampSound = System.currentTimeMillis();
-								MyData data = new MyData(1,timestampSound);
+								/*MyData data = new MyData(1,timestampSound);
 								Message msg = new Message();
 								msg.obj = data;
-								handler.sendMessage(msg);
-								Log.i("1213", "³É¹¦·¢ËÍÊı¾İ");
+								handler.sendMessage(msg);*/
 								try {
 									Thread.sleep(1000);
 								} catch (InterruptedException e) {
@@ -297,13 +324,51 @@ public class MainActivity extends Activity {
 					});
 					soundTestThread.start();
 					
+					//å¯åŠ¨PDRService
+					Thread PDRThread = new Thread(new Runnable() {
+					
+						@Override
+						public void run()
+						{
+							while (soundFlag){
+								
+							
+							//delay
+							try {
+								Thread.sleep(10);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+							//get User's orientation
+							vOrientation = mOrientation.getOrientation();
+							//get User's stepNumber
+							mStepNumber = mStepDetector.getStepNumber();
+							//Log.d(TAG, "vOrientation[0]: " + Math.toDegrees(vOrientation[0]));
+							//when detect a new step
+							//Log.d("mStepNumber", "mStepNumber: " + mStepNumber);
+							if (mStepNumber != mFormerStepNumber) {
+								//Estimate user's position, PDR-Only
+								long timeCurrent = System.currentTimeMillis();
+								float mStepLength = 0.6f;
+			                    Message msg = new Message();
+			                    MyData data = new MyData(4, timeCurrent, mStepNumber, 
+			                    		mStepLength, (float)Math.toDegrees(vOrientation[0]));
+			                    msg.obj = data;
+			                    handler.sendMessage(msg);
+			    				mFormerStepNumber = mStepNumber;
+							}
+						}
+						}
+					});
+					PDRThread.start();	
+					
 				} else {
 					soundFlag = false;
 				}
 			}
 		});
 
-		// btn1µÄ°´¼ü¼àÌı
+		// btn1çš„æŒ‰é”®ç›‘å¬
 		btn1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				if (isChecked) {
@@ -331,7 +396,7 @@ public class MainActivity extends Activity {
 			}
 		});
 
-		// btn2µÄ°´¼ü×´Ì¬¼àÌı£¬´ò¿ªÔòÏÔÊ¾ÃÉ°æ
+		// btn2çš„æŒ‰é”®çŠ¶æ€ç›‘å¬ï¼Œæ‰“å¼€åˆ™æ˜¾ç¤ºè’™ç‰ˆ
 		btn2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				if (isChecked) {
@@ -343,7 +408,7 @@ public class MainActivity extends Activity {
 			}
 		});
 
-		// btn3µÄ°´¼ü¼àÌı,´ò¿ªÔòÏÔÊ¾ÒÑ»­³öÀ´µÄµØÍ¼
+		// btn3çš„æŒ‰é”®ç›‘å¬,æ‰“å¼€åˆ™æ˜¾ç¤ºå·²ç”»å‡ºæ¥çš„åœ°å›¾
 		btn3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				if (isChecked) {
@@ -355,17 +420,17 @@ public class MainActivity extends Activity {
 			}
 		});
 
-		// btn4µÄ°´¼ü¼àÌı
+		// btn4çš„æŒ‰é”®ç›‘å¬
 		btn4.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				// ÖØÆôÖ÷»î¶¯
+				// é‡å¯ä¸»æ´»åŠ¨
 				Intent intent = getIntent();
 				finish();
 				startActivity(intent);
 
-				// ÏÖÔÚÖ±½ÓÓÃ¶¯Ì¬È¥³ıviewµÄ·½·¨£¬¶ø²»ÊÇÖØÆôÖ÷»î¶¯ÁË
+				// ç°åœ¨ç›´æ¥ç”¨åŠ¨æ€å»é™¤viewçš„æ–¹æ³•ï¼Œè€Œä¸æ˜¯é‡å¯ä¸»æ´»åŠ¨äº†
 				// ll.removeView(draw_board);
 				// ll.removeView(draw_point);
 			}
@@ -389,22 +454,22 @@ public class MainActivity extends Activity {
 			}
 		});
 
-		// ÉèÖÃSpinnerµÄ¼àÌıÆ÷£¬ÓÃÓÚ¸Ä±ä±³¾°µØÍ¼
+		// è®¾ç½®Spinnerçš„ç›‘å¬å™¨ï¼Œç”¨äºæ”¹å˜èƒŒæ™¯åœ°å›¾
 		mapSet.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				switch (position) {
 				case 0:
-					map_bg.setBackgroundResource(R.drawable.blank_map); // ¿Õ°×Í¼
-					// Ìí¼ÓÃª½ÚµãµÄÊÓÍ¼
+					map_bg.setBackgroundResource(R.drawable.blank_map); // ç©ºç™½å›¾
+					// æ·»åŠ é”šèŠ‚ç‚¹çš„è§†å›¾
 					fl.addView(anchorsView);
 					break;
 				case 1:
-					map_bg.setBackgroundResource(R.drawable.control_new_5f); // ¹¤¿ØĞÂÂ¥5F
+					map_bg.setBackgroundResource(R.drawable.control_new_5f); // å·¥æ§æ–°æ¥¼5F
 					fl.removeView(anchorsView);
 					break;
 				case 2:
-					map_bg.setBackgroundResource(R.drawable.map_9_526); // ½Ì¾Å526
+					map_bg.setBackgroundResource(R.drawable.map_9_526); // æ•™ä¹526
 					fl.removeView(anchorsView);
 					break;
 
@@ -419,6 +484,7 @@ public class MainActivity extends Activity {
 			}
 		});
 	}
+
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -439,14 +505,40 @@ public class MainActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	// ÊµÏÖ´Ódipµ¥Î»µ½pxµ¥Î»µÄ×ª»»
+	// å®ç°ä»dipå•ä½åˆ°pxå•ä½çš„è½¬æ¢
 	public int dip2px(Context context, float dipValue) {
 		final float scale = context.getResources().getDisplayMetrics().density;
 		return (int) (dipValue * scale + 0.5f);
 	}
 
-	// ·â×°£¬´Ódip->px
+	// å°è£…ï¼Œä»dip->px
 	public int transf(float dipValue) {
 		return dip2px(MainActivity.this, dipValue);
 	}
+	
+    
+/*    @Override
+    public void onResume() {
+        mOrientation.onResume();
+        mStepDetector.onResume();
+    }*/
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mOrientation.onPause();
+        mStepDetector.onPause();
+    }
+    
+    public void startSensor() {
+    	//Log.d(TAG, "Start Sensors");
+    	//mSensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
+    	mOrientation = new GyroscopeOrientation(this);
+    	mStepDetector = new StepDetector(this);
+    	mPositionEstimate = new PositionEstimate(mPosition, 0);
+    	com.ivan.particleFilter.Point tmpPosition = new com.ivan.particleFilter.Point(mPosition[0],mPosition[1]);
+    	mParticleFilter = new ParticleFilter(numParticles, tmpPosition);
+    	/*Log.d(TAG, "mPosition " + mStepNumber + ", x: " 
+				+ mPosition[0] + "y: " + mPosition[1]);*/
+    }
 }
